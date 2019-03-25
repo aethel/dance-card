@@ -3,6 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
+import { geolocated } from 'react-geolocated';
 
 const SignUpPage = () => (
   <div>
@@ -48,36 +49,43 @@ class SignUpFormBase extends Component {
 
   render() {
     const { username, email, password, error } = this.state;
+    const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props;
     const isInvalid = password === '' || email === '' || username === '';
-
+    console.log(coords);
     return (
-      <form>
-        <input
-          type="text"
-          name="username"
-          value={username}
-          onChange={this.onChange}
-          placeholder="name"
-        />
-        <input
-          type="email"
-          name="email"
-          value={email}
-          onChange={this.onChange}
-          placeholder="email"
-        />
-        <input
-          type="password"
-          name="password"
-          value={password}
-          onChange={this.onChange}
-          placeholder="password"
-        />
-        <button disabled={isInvalid} type="button" onClick={this.onSubmit}>
-          Submit
-        </button>
-        {error && <p>{error.message}</p>}
-      </form>
+      <div>
+        <div>available {isGeolocationAvailable}</div>
+        <div>enabled {isGeolocationEnabled}</div>
+        <div>{coords && coords.longitude}</div>
+        <div>{coords && coords.latitude}</div>
+        <form>
+          <input
+            type="text"
+            name="username"
+            value={username}
+            onChange={this.onChange}
+            placeholder="name"
+          />
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={this.onChange}
+            placeholder="email"
+          />
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={this.onChange}
+            placeholder="password"
+          />
+          <button disabled={isInvalid} type="button" onClick={this.onSubmit}>
+            Submit
+          </button>
+          {error && <p>{error.message}</p>}
+        </form>
+      </div>
     );
   }
 }
@@ -93,5 +101,10 @@ const SignUpForm = compose(
   withFirebase
 )(SignUpFormBase);
 
-export default SignUpPage;
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: true
+  },
+  userDecisionTimeout: 5000
+})(SignUpPage);
 export { SignUpForm, SignUpLink };

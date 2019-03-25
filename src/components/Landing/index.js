@@ -1,10 +1,10 @@
-import React, { Component } from 'react'
-import { geolocated } from 'react-geolocated'
+import React, { Component } from 'react';
+// import { geolocated } from 'react-geolocated';
 
 class Landing extends Component {
   render() {
-    const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props
-    console.log(coords)
+    const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props;
+    console.log(coords);
 
     return (
       <React.Fragment>
@@ -13,13 +13,14 @@ class Landing extends Component {
         <div>{coords && coords.longitude}</div>
         <div>{coords && coords.latitude}</div>
       </React.Fragment>
-    )
+    );
   }
 }
 
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: true
-  },
-  userDecisionTimeout: 5000
-})(Landing)
+// export default geolocated({
+//   positionOptions: {
+//     enableHighAccuracy: true
+//   },
+//   userDecisionTimeout: 5000
+// })(Landing)
+export default Landing;
