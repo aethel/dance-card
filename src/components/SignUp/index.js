@@ -26,15 +26,25 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = event => {
-    const { email, password, username } = this.state;
+    const { email, password } = this.state;
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
-        return this.props.firebase
-          .user(authUser.user.id)
-          .set({ username, email });
+        console.log(authUser.user.uid);
+        console.log(authUser.user);
+        this.props.firebase.users('user').doc(authUser.user.uid);
+        // return this.props.firebase.user(authUser.user.uid).set(
+        //   {
+        //     username,
+        //     email
+        //   },
+        //   { merge: true }
+        // );
+        return authUser;
       })
       .then(authUser => {
+        console.log(authUser);
+
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.HOME);
       })
@@ -51,7 +61,7 @@ class SignUpFormBase extends Component {
     const { username, email, password, error } = this.state;
     const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props;
     const isInvalid = password === '' || email === '' || username === '';
-    console.log(coords);
+    // console.log(coords);
     return (
       <div>
         <div>available {isGeolocationAvailable}</div>
