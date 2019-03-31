@@ -25,8 +25,8 @@ class Firebase {
   doSignOut = () => this.auth.signOut();
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
-  user = uid => this.db.doc(`users/${uid}`);
-  users = collection => this.db.collection(collection);
+  users = () => this.db.collection('users');
+  user = uid => this.db.users().doc(`${uid}`);
 }
 
 export default Firebase;

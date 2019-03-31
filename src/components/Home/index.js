@@ -19,9 +19,20 @@ class HomeBase extends Component {
 
   componentWillMount() {
     this.setState({ loading: true });
-    this.props.firebase.users('user').onSnapshot(qs => {
-      qs.docs.map(doc => console.log(doc));
-    });
+    this.props.firebase.users().onSnapshot(
+      qs => {
+        console.log(qs);
+        console.log(qs.docs);
+
+        qs.docs.map(doc => {
+          debugger;
+          console.log(doc, 'doc');
+          console.log(doc.data(), 'doc');
+          return true;
+        });
+      },
+      error => console.log(error)
+    );
   }
   render() {
     return <div>blah</div>;
