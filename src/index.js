@@ -4,12 +4,12 @@ import './index.css';
 import * as serviceWorker from './serviceWorker';
 
 import App from './components/App';
-import Firebase, { FirebaseContext } from './components/Firebase';
+import ParseBackend, { ParseContext } from './components/Firebase';
 
 ReactDOM.render(
-  <FirebaseContext.Provider value={new Firebase()}>
+  <ParseContext.Provider value={new ParseBackend()}>
     <App />
-  </FirebaseContext.Provider>,
+  </ParseContext.Provider>,
   document.getElementById('root')
 );
 

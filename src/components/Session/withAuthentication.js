@@ -1,7 +1,7 @@
 import React from 'react';
 
 import AuthUserContext from './context';
-import { withFirebase } from '../Firebase';
+import { withParse } from '../Parse';
 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
@@ -9,18 +9,16 @@ const withAuthentication = Component => {
       super(props);
 
       this.state = {
-        authUser: null,
+        authUser: null
       };
     }
 
     componentDidMount() {
-      this.listener = this.props.firebase.auth.onAuthStateChanged(
-        authUser => {
-          authUser
-            ? this.setState({ authUser })
-            : this.setState({ authUser: null });
-        },
-      );
+      // this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {
+      //   authUser
+      //     ? this.setState({ authUser })
+      //     : this.setState({ authUser: null });
+      // });
     }
 
     componentWillUnmount() {
@@ -36,7 +34,7 @@ const withAuthentication = Component => {
     }
   }
 
-  return withFirebase(WithAuthentication);
+  return withParse(WithAuthentication);
 };
 
 export default withAuthentication;
