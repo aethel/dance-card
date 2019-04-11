@@ -24,8 +24,7 @@ class HomeBase extends Component {
         console.log(qs);
         console.log(qs.docs);
 
-        qs.docs.map(doc => {
-          debugger;
+        qs.docs.map(doc => {          
           console.log(doc, 'doc');
           console.log(doc.data(), 'doc');
           return true;

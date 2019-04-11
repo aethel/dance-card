@@ -3,7 +3,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
-import { geolocated } from 'react-geolocated';
+// import { geolocated } from 'react-geolocated';
 
 const SignUpPage = () => (
   <div>
@@ -105,10 +105,6 @@ const SignUpForm = compose(
   withFirebase
 )(SignUpFormBase);
 
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: true
-  },
-  userDecisionTimeout: 5000
-})(SignUpPage);
+
+export default SignUpPage;
 export { SignUpForm, SignUpLink };
