@@ -16,7 +16,9 @@ const INITIAL_STATE = {
   username: '',
   email: '',
   password: '',
-  error: null
+  error: null,
+  lng: null,
+  lat: null
 };
 
 class SignUpFormBase extends Component {
@@ -25,13 +27,16 @@ class SignUpFormBase extends Component {
     this.state = { ...INITIAL_STATE }; //used with destructuring, so that initial state can be reused later to reset the values
   }
 
+  componentDidMount(){
+    this.getGeolocation();
+  }
+
   onSubmit = event => {
     const { email, password, username } = this.state;
+    // geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
-        console.log(authUser.user.uid);
-        console.log(authUser.user);
         return this.props.firebase
           .users()
           .doc(authUser.user.uid)
@@ -48,9 +53,23 @@ class SignUpFormBase extends Component {
   };
 
   onChange = event => {
+    console.log(this.state);
+    
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  getGeolocation = () => {
+    debugger;
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition((position) => {
+        this.setState({lat: position.coords.latitude})
+        this.setState({lng: position.coords.longitude})
+      })
+    } else {
+      console.log('no geolocation');
+      
+    }
+  }
   render() {
     const { username, email, password, error } = this.state;
     const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props;
