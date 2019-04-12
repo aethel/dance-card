@@ -60,28 +60,22 @@ class SignUpFormBase extends Component {
   };
 
   getGeolocation = () => {
-    debugger;
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition((position) => {
          const location = this.props.firebase.geoPoint(position.coords.latitude,position.coords.longitude)
         this.setState({location});
       })
     } else {
-      console.log('no geolocation');
-      
+      this.setState({error: 'Geolocation unavailable'})
+      console.warn('no geolocation');
     }
   }
   render() {
     const { username, email, password, error } = this.state;
-    const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props;
     const isInvalid = password === '' || email === '' || username === '';
     // console.log(coords);
     return (
       <div>
-        <div>available {isGeolocationAvailable}</div>
-        <div>enabled {isGeolocationEnabled}</div>
-        <div>{coords && coords.longitude}</div>
-        <div>{coords && coords.latitude}</div>
         <form>
           <input
             type="text"
