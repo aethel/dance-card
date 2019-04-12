@@ -17,8 +17,10 @@ const INITIAL_STATE = {
   email: '',
   password: '',
   error: null,
-  lng: null,
-  lat: null
+  location: {
+    Latitude: null,
+    Longitude: null
+  }
 };
 
 class SignUpFormBase extends Component {
@@ -32,7 +34,7 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = event => {
-    const { email, password, username } = this.state;
+    const { email, password, username, location } = this.state;
     // geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
@@ -40,7 +42,7 @@ class SignUpFormBase extends Component {
         return this.props.firebase
           .users()
           .doc(authUser.user.uid)
-          .set({ username, email }, { merge: true });
+          .set({ username, email, location }, { merge: true });
       })
       .then(authUser => {
         console.log(authUser);
@@ -53,8 +55,7 @@ class SignUpFormBase extends Component {
   };
 
   onChange = event => {
-    console.log(this.state);
-    
+    console.log(this.state);  
     this.setState({ [event.target.name]: event.target.value });
   };
 
@@ -62,8 +63,8 @@ class SignUpFormBase extends Component {
     debugger;
     if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition((position) => {
-        this.setState({lat: position.coords.latitude})
-        this.setState({lng: position.coords.longitude})
+         const location = this.props.firebase.geoPoint(position.coords.latitude,position.coords.longitude)
+        this.setState({location});
       })
     } else {
       console.log('no geolocation');
