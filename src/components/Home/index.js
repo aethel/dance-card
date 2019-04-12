@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 
 const HomePage = () => (
   <div>
-    <Home />
+      <Home />
   </div>
 );
 
@@ -21,11 +21,9 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     this.props.firebase.users().onSnapshot(
       qs => {
-        console.log(qs);
         console.log(qs.docs);
 
-        qs.docs.map(doc => {
-          debugger;
+        qs.docs.map(doc => {          
           console.log(doc, 'doc');
           console.log(doc.data(), 'doc');
           return true;
@@ -35,6 +33,8 @@ class HomeBase extends Component {
     );
   }
   render() {
+    console.log(this.props);
+    
     return <div>blah</div>;
   }
 }
