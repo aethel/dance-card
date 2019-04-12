@@ -1,12 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
+import { withAuthorisation } from '../Session';
 
 const HomePage = () => (
   <div>
+    <h1>hello signed in user</h1>
       <Home />
   </div>
 );
+
+const condition = authUser => !! authUser;
 
 class HomeBase extends Component {
   constructor(props) {
@@ -39,6 +43,6 @@ class HomeBase extends Component {
   }
 }
 
-const Home = compose(withFirebase)(HomeBase);
+const Home = compose(withFirebase,withAuthorisation(condition))(HomeBase);
 
 export default HomePage;
