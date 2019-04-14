@@ -25,11 +25,8 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     this.props.firebase.users().onSnapshot(
       qs => {
-        console.log(qs.docs);
-
         qs.docs.map(doc => {          
-          console.log(doc, 'doc');
-          console.log(doc.data(), 'doc');
+          console.log(doc.data(), 'doc data');
           return true;
         });
       },
@@ -37,8 +34,6 @@ class HomeBase extends Component {
     );
   }
   render() {
-    console.log(this.props);
-    
     return <div>blah</div>;
   }
 }
