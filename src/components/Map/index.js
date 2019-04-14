@@ -11,8 +11,8 @@ const PopupMarker = ({ children, position }) => (
 )
 
 export default class DanceMap extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             lat: 45.6982642,
             lng: 9.6772698,
@@ -21,7 +21,10 @@ export default class DanceMap extends Component {
     }
 
     render() {
-        const centre = [this.state.lat, this.state.lng];
+        console.log(this.props, 'map props');
+        const {location} = this.props;
+        const centre = [location.lat, location.lng];
+        
         return (
             <Map style={{width:'100vw', height: '100vw'}} center={centre} zoom={this.state.zoom}>
                 <TileLayer

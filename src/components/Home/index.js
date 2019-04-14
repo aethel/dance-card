@@ -1,44 +1,66 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
-import { withAuthorisation } from '../Session';
+import { withAuthorisation, withAuthentication, AuthUserContext } from '../Session';
 import DanceMap from '../Map';
 
 const HomePage = () => (
-  <div>
-    <h1>hello signed in user</h1>
-      <Home />
-  </div>
+  <section>
+    <AuthUserContext.Consumer>
+      {authUser => <Home user={authUser} />}
+    </AuthUserContext.Consumer>
+  </section>
 );
 
-const condition = authUser => !! authUser;
+const condition = authUser => !!authUser;
 
 class HomeBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      users: []
+      users: [],
+      location: null
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ loading: true });
-    this.props.firebase.users().onSnapshot(
-      qs => {
-        qs.docs.map(doc => {          
-          console.log(doc.data(), 'doc data');
-          return true;
-        });
-      },
-      error => console.log(error)
-    );
+    console.log('mounted');
+    
+    // this.props.firebase.users().onSnapshot(
+    //   qs => {
+    //     qs.docs.map(doc => {          
+    //       console.log(doc.data(), 'doc data');
+    //       return true;
+    //     });
+    //   },
+    //   error => console.log(error)
+    // );
   }
+
+  getUsersLocation = (uid) => {
+    this.props.firebase.user(uid).get().then(res => {
+      console.log(res.data());
+      this.setState({location: res.data().location})
+    });
+    //get user from firebase and return thei location
+  };
+
   render() {
-    return <React.Fragment><DanceMap/></React.Fragment>;
+    console.log(this.props.firebase.auth.currentUser.uid, 'curentUser');
+    const {user} = this.props;
+    const {location} = this.state;
+    {user ? this.getUsersLocation('0NLgjaNzmWckJ4TiITL1GxTKhb82') : console.log('bouser')};
+    
+    return <React.Fragment>
+      <h1>hello {user ? user.displayName : 'default'}</h1>
+      <DanceMap location={location}/>;
+     
+    </React.Fragment>
   }
 }
 
-const Home = compose(withFirebase,withAuthorisation(condition))(HomeBase);
+const Home = compose(withFirebase, withAuthentication, withAuthorisation(condition))(HomeBase);
 
 export default HomePage;

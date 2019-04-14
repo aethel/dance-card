@@ -12,14 +12,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-body {
-  background: pink;
-}
-
-.leaflet-container {
-  width: 400px;
-  height: 400px;
-  position: relative;
-  outline: 2px solid blue;
-}
