@@ -1,12 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
+import { withAuthorisation } from '../Session';
 
 const HomePage = () => (
   <div>
+    <h1>hello signed in user</h1>
       <Home />
   </div>
 );
+
+const condition = authUser => !! authUser;
 
 class HomeBase extends Component {
   constructor(props) {
@@ -21,11 +25,8 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     this.props.firebase.users().onSnapshot(
       qs => {
-        console.log(qs.docs);
-
         qs.docs.map(doc => {          
-          console.log(doc, 'doc');
-          console.log(doc.data(), 'doc');
+          console.log(doc.data(), 'doc data');
           return true;
         });
       },
@@ -33,12 +34,10 @@ class HomeBase extends Component {
     );
   }
   render() {
-    console.log(this.props);
-    
     return <div>blah</div>;
   }
 }
 
-const Home = compose(withFirebase)(HomeBase);
+const Home = compose(withFirebase,withAuthorisation(condition))(HomeBase);
 
 export default HomePage;
