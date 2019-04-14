@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
 import { withAuthorisation } from '../Session';
+import DanceMap from '../Map';
 
 const HomePage = () => (
   <div>
@@ -34,7 +35,7 @@ class HomeBase extends Component {
     );
   }
   render() {
-    return <div>blah</div>;
+    return <React.Fragment><DanceMap/></React.Fragment>;
   }
 }
 
