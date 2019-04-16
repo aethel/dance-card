@@ -21,9 +21,8 @@ export default class DanceMap extends Component {
     }
 
     render() {
-        console.log(this.props, 'map props');
         const {location} = this.props;
-        const centre = [location.lat, location.lng];
+        const centre = location ?  Object.values(location) : [this.state.lat, this.state.lng];
         
         return (
             <Map style={{width:'100vw', height: '100vw'}} center={centre} zoom={this.state.zoom}>
@@ -31,7 +30,7 @@ export default class DanceMap extends Component {
           attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
           url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
 />
-                <PopupMarker position={[45.69836455, 9.6472798]} >Is a label</PopupMarker>
+                <PopupMarker position={centre} >Is a label</PopupMarker>
             </Map>
         )
     }

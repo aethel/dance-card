@@ -26,8 +26,7 @@ class HomeBase extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    console.log('mounted');
-    
+    this.setUsersLocation('0NLgjaNzmWckJ4TiITL1GxTKhb82')
     // this.props.firebase.users().onSnapshot(
     //   qs => {
     //     qs.docs.map(doc => {          
@@ -39,23 +38,19 @@ class HomeBase extends Component {
     // );
   }
 
-  getUsersLocation = (uid) => {
-    this.props.firebase.user(uid).get().then(res => {
-      console.log(res.data());
+  setUsersLocation = (uid) => {
+    this.props.firebase.user(uid).get().then(res => {      
       this.setState({location: res.data().location})
-    });
-    //get user from firebase and return thei location
+    });    
   };
 
   render() {
-    console.log(this.props.firebase.auth.currentUser.uid, 'curentUser');
     const {user} = this.props;
     const {location} = this.state;
-    {user ? this.getUsersLocation('0NLgjaNzmWckJ4TiITL1GxTKhb82') : console.log('bouser')};
     
     return <React.Fragment>
       <h1>hello {user ? user.displayName : 'default'}</h1>
-      <DanceMap location={location}/>;
+  {location && <DanceMap location={location}/>};
      
     </React.Fragment>
   }
