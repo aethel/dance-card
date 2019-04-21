@@ -35,7 +35,7 @@ class SignUpFormBase extends Component {
 
   onSubmit = event => {
     const { email, password, username } = this.state;
-    const { location } = this.props;
+    const { geoLocation } = this.props;
     // geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
@@ -44,7 +44,7 @@ class SignUpFormBase extends Component {
           .users()
           .doc(authUser.user.uid)
           .set(
-            { username, email, location: location.geoPoint },
+            { username, email, location: geoLocation.geoPoint },
             { merge: true }
           );
       })
