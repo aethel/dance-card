@@ -1,5 +1,6 @@
 import React from 'react';
 import GeolocationContext from './context';
+import { withFirebase } from '../Firebase';
 
 const withGeolocation = Component => {
   class WithGeolocation extends React.Component {
@@ -16,17 +17,17 @@ const withGeolocation = Component => {
     componentDidMount() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
-          this.setState({
-            location: {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            }
-          });
           const geoPoint = this.props.firebase.geoPoint(
             position.coords.latitude,
             position.coords.longitude
           );
-          this.setState({ geoPoint });
+          this.setState({
+            location: {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            },
+            geoPoint
+          });
           console.log(this.state);
         });
       } else {
@@ -44,7 +45,7 @@ const withGeolocation = Component => {
     }
   }
 
-  return WithGeolocation;
+  return withFirebase(WithGeolocation);
 };
 
 export default withGeolocation;

@@ -11,7 +11,7 @@ const SignUpPage = () => (
   <div>
     <h1>Sign Up</h1>
     <GeolocationContext.Consumer>
-      {location => <SignUpForm location={location} />}
+      {location => <SignUpForm geoLocation={location} />}
     </GeolocationContext.Consumer>
   </div>
 );
@@ -121,9 +121,8 @@ const SignUpLink = () => (
 
 const SignUpForm = compose(
   withRouter,
-  withFirebase,
-  withGeolocation
+  withFirebase
 )(SignUpFormBase);
 
-export default SignUpPage;
+export default withGeolocation(SignUpPage);
 export { SignUpForm, SignUpLink };
