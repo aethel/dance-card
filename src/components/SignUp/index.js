@@ -49,7 +49,6 @@ class SignUpFormBase extends Component {
           );
       })
       .then(authUser => {
-        console.log(authUser);
         this.setState({ ...INITIAL_STATE });
         this.props.history.push(ROUTES.HOME);
       })
@@ -59,26 +58,12 @@ class SignUpFormBase extends Component {
   };
 
   onChange = event => {
-    console.log(this.state);
-    console.log(this.props, 'sign up');
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  // getGeolocation = () => {
-  //   if(navigator.geolocation){
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //        const location = this.props.firebase.geoPoint(position.coords.latitude,position.coords.longitude)
-  //       this.setState({location});
-  //     })
-  //   } else {
-  //     this.setState({error: 'Geolocation unavailable'})
-  //     console.warn('no geolocation');
-  //   }
-  // }
-  render() {
+    render() {
     const { username, email, password, error } = this.state;
-    const isInvalid = password === '' || email === '' || username === '';
-    // console.log(coords);
+    const isInvalid = password === '' || email === '' || username === '';    
     return (
       <div>
         <form>
