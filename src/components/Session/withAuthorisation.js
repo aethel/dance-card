@@ -10,7 +10,7 @@ const withAuthorization = condition => Component => {
   class WithAuthorization extends React.Component {
     componentDidMount() {
       this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {        
-        sessionStorage.setItem('uid', authUser.uid)
+        if(!!authUser) { sessionStorage.setItem('uid', authUser.uid);}        
         if (!condition(authUser)) {
           this.props.history.push(ROUTES.SIGN_IN);
         }
