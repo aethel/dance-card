@@ -10,19 +10,9 @@ const config = {
   storageBucket: process.env.REACT_APP_STORAGE_APP,
   messagingSenderId: process.env.REACT_APP_MESSAGE_SENDER
 };
-// const config = {
-//   apiKey: "AIzaSyDNm6RFbwjlkKnY83gzR1eCru6GtPVz8CE",
-//   authDomain: "dancecard-50c3f.firebaseapp.com",
-//   databaseURL: "https://dancecard-50c3f.firebaseio.com",
-//   projectId: "dancecard-50c3f",
-//   storageBucket: "dancecard-50c3f.appspot.com",
-//   messagingSenderId: "368875192319"
-// };
 
 class Firebase {
   constructor() {
-    console.log(config);
-    
     app.initializeApp(config);
     this.auth = app.auth();
     this.db = app.firestore();
@@ -37,7 +27,7 @@ class Firebase {
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
   users = () => this.db.collection('users');
-  user = uid => this.db.users().doc(`${uid}`);
+  user = uid => this.db.doc(`users/${uid}`);
   geoPoint = (latitude,longitude) => new this.firestoreRef.GeoPoint(latitude,longitude)
 }
 

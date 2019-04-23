@@ -3,12 +3,16 @@ import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import * as ROUTES from '../../constants/routes';
 import { withFirebase } from '../Firebase';
+import withGeolocation from '../Geolocation';
+import GeolocationContext from '../Geolocation/context';
 // import { geolocated } from 'react-geolocated';
 
 const SignUpPage = () => (
   <div>
     <h1>Sign Up</h1>
-    <SignUpForm />
+    <GeolocationContext.Consumer>
+      {location => <SignUpForm geoLocation={location} />}
+    </GeolocationContext.Consumer>
   </div>
 );
 
@@ -16,11 +20,7 @@ const INITIAL_STATE = {
   username: '',
   email: '',
   password: '',
-  error: null,
-  location: {
-    Latitude: null,
-    Longitude: null
-  }
+  error: null
 };
 
 class SignUpFormBase extends Component {
@@ -29,12 +29,13 @@ class SignUpFormBase extends Component {
     this.state = { ...INITIAL_STATE }; //used with destructuring, so that initial state can be reused later to reset the values
   }
 
-  componentDidMount(){
-    this.getGeolocation();
-  }
+  // componentDidMount(){
+  //   this.getGeolocation();
+  // }
 
   onSubmit = event => {
-    const { email, password, username, location } = this.state;
+    const { email, password, username } = this.state;
+    const { geoLocation } = this.props;
     // geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
@@ -42,7 +43,10 @@ class SignUpFormBase extends Component {
         return this.props.firebase
           .users()
           .doc(authUser.user.uid)
-          .set({ username, email, location }, { merge: true });
+          .set(
+            { username, email, location: geoLocation.geoPoint },
+            { merge: true }
+          );
       })
       .then(authUser => {
         console.log(authUser);
@@ -55,21 +59,22 @@ class SignUpFormBase extends Component {
   };
 
   onChange = event => {
-    console.log(this.state);  
+    console.log(this.state);
+    console.log(this.props, 'sign up');
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  getGeolocation = () => {
-    if(navigator.geolocation){
-      navigator.geolocation.getCurrentPosition((position) => {
-         const location = this.props.firebase.geoPoint(position.coords.latitude,position.coords.longitude)
-        this.setState({location});
-      })
-    } else {
-      this.setState({error: 'Geolocation unavailable'})
-      console.warn('no geolocation');
-    }
-  }
+  // getGeolocation = () => {
+  //   if(navigator.geolocation){
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //        const location = this.props.firebase.geoPoint(position.coords.latitude,position.coords.longitude)
+  //       this.setState({location});
+  //     })
+  //   } else {
+  //     this.setState({error: 'Geolocation unavailable'})
+  //     console.warn('no geolocation');
+  //   }
+  // }
   render() {
     const { username, email, password, error } = this.state;
     const isInvalid = password === '' || email === '' || username === '';
@@ -119,6 +124,5 @@ const SignUpForm = compose(
   withFirebase
 )(SignUpFormBase);
 
-
-export default SignUpPage;
+export default withGeolocation(SignUpPage);
 export { SignUpForm, SignUpLink };

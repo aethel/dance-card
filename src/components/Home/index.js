@@ -1,43 +1,55 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
-import { withAuthorisation } from '../Session';
+import { withAuthorisation, withAuthentication, AuthUserContext } from '../Session';
+import DanceMap from '../Map';
 
 const HomePage = () => (
-  <div>
-    <h1>hello signed in user</h1>
-      <Home />
-  </div>
+  <section>
+    <AuthUserContext.Consumer>
+      {authUser => <Home user={authUser} />}
+    </AuthUserContext.Consumer>
+  </section>
 );
 
-const condition = authUser => !! authUser;
+const condition = authUser => !!authUser;
 
 class HomeBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: false,
-      users: []
+      users: [],
+      location: null
     };
   }
-
-  componentWillMount() {
+   
+  componentDidMount() {
     this.setState({ loading: true });
-    this.props.firebase.users().onSnapshot(
-      qs => {
-        qs.docs.map(doc => {          
-          console.log(doc.data(), 'doc data');
-          return true;
-        });
-      },
-      error => console.log(error)
-    );
+    const uid = sessionStorage.getItem('uid');
+    console.log(uid);
+    this.setUsersLocation(uid);    
   }
+
+  setUsersLocation = (uid) => {
+    this.props.firebase.user(uid).get().then(res => {      
+      this.setState({location: res.data().location})
+    }, error => this.setState({error}));    
+  };
+
   render() {
-    return <div>blah</div>;
+    const {user} = this.props;
+    const {location, error} = this.state;
+    
+    return <React.Fragment>
+      <h1>hello {user ? user.username : 'default'}</h1>
+{error && <p>{this.state.error}</p>}
+  {location && <DanceMap location={location}/>};
+     
+    </React.Fragment>
   }
 }
 
-const Home = compose(withFirebase,withAuthorisation(condition))(HomeBase);
+const Home = compose(withFirebase, withAuthentication, withAuthorisation(condition))(HomeBase);
 
 export default HomePage;
