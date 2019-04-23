@@ -23,33 +23,27 @@ class HomeBase extends Component {
       location: null
     };
   }
-
+   
   componentDidMount() {
     this.setState({ loading: true });
-    this.setUsersLocation('0NLgjaNzmWckJ4TiITL1GxTKhb82')
-    // this.props.firebase.users().onSnapshot(
-    //   qs => {
-    //     qs.docs.map(doc => {          
-    //       console.log(doc.data(), 'doc data');
-    //       return true;
-    //     });
-    //   },
-    //   error => console.log(error)
-    // );
+    const uid = sessionStorage.getItem('uid');
+    console.log(uid);
+    this.setUsersLocation(uid);    
   }
 
   setUsersLocation = (uid) => {
     this.props.firebase.user(uid).get().then(res => {      
       this.setState({location: res.data().location})
-    });    
+    }, error => this.setState({error}));    
   };
 
   render() {
     const {user} = this.props;
-    const {location} = this.state;
+    const {location, error} = this.state;
     
     return <React.Fragment>
-      <h1>hello {user ? user.displayName : 'default'}</h1>
+      <h1>hello {user ? user.username : 'default'}</h1>
+{error && <p>{this.state.error}</p>}
   {location && <DanceMap location={location}/>};
      
     </React.Fragment>
