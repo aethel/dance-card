@@ -33,9 +33,7 @@ export default class DanceMap extends Component {
     render() {
         const {location, users} = this.props;
         const centre = location ?  Object.values(location) : [this.state.lat, this.state.lng];
-        console.log(users);
         const userItem = users.filter(user => user.location).map((user) => ({...user, location: Object.values(user.location)})).map((user,index) => <PopupMarker key={index} position={Object.values(user.location)} >{user.username}, {user.email}</PopupMarker> );
-        // const userItem = users.map((user) =>   <PopupMarker position={Object.values(user.location)} >{user.username}, {user.email}</PopupMarker>);
         return (
             <React.Fragment>
 

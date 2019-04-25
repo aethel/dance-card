@@ -1,7 +1,7 @@
 import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
-
+import {GeoFirestore} from 'geofirestore';
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -17,6 +17,7 @@ class Firebase {
     this.auth = app.auth();
     this.db = app.firestore();
     this.firestoreRef = app.firestore;
+    this.geofirestore = new GeoFirestore(this.db);
   }
 
   doCreateUserWithEmailAndPassword = (email, password) =>
@@ -27,6 +28,7 @@ class Firebase {
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
   users = () => this.db.collection('users');
+  geoUsers = () => this.geofirestore.collection('users');
   user = uid => this.db.doc(`users/${uid}`);
   geoPoint = (latitude,longitude) => new this.firestoreRef.GeoPoint(latitude,longitude)
 }

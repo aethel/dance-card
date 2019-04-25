@@ -28,13 +28,17 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     const uid = sessionStorage.getItem('uid');    
     this.setUsersLocation(uid);    
+    this.setGeoUsersLocation();
     const snapshot = await this.props.firebase.users().get();
     const data = [];
     snapshot.docs.map(doc => data.push(doc.data()));
     this.setState({users:[...this.state.users,...data]})
-    console.log(data,this.state.users);
   }
 
+setGeoUsersLocation = () => {
+const query = this.props.firebase.geoUsers().near({center: new this.props.firebase.firestoreRef.GeoPoint(52.520008,13.404954), radius: 100});
+query.get().then(res => console.log(res.docs, 'geo query'));
+}
   setUsersLocation = (uid) => {
     this.props.firebase.user(uid).get().then(res => {      
       this.setState({location: res.data().location})
@@ -44,7 +48,6 @@ class HomeBase extends Component {
   render() {
     const {user} = this.props;
     const {location, error, users} = this.state;
-    console.log(user);
     
     return <React.Fragment>
       <h1>hello {!!user && !!user.displayName ? user.displayName : 'default'}</h1>

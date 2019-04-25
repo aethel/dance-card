@@ -40,13 +40,17 @@ class SignUpFormBase extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
+        const doc = {username, email, coordinates:geoLocation.geoPoint}; 
         return this.props.firebase
-          .users()
-          .doc(authUser.user.uid)
-          .set(
-            { username, email, location: geoLocation.geoPoint },
-            { merge: true }
-          );
+          .geoUsers()
+          .add(doc)
+          .then(docRef => {
+            console.log(docRef);
+            console.log(docRef.id);
+            
+            // this.props.firebase.geoUsers().set(docRef.id, {id:docRef.id, ...doc}).then(res => console.log(res)        )
+          });
+          
       })
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });

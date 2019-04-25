@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "firebase": "^5.9.2",
+    "geofirestore": "^3.3.0",
     "leaflet": "^1.4.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2",
