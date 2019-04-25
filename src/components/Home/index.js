@@ -28,11 +28,9 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     const uid = sessionStorage.getItem('uid');    
     this.setUsersLocation(uid);    
-    // this.props.firebase.users().then(users => console.log(users));
     const snapshot = await this.props.firebase.users().get();
     const data = [];
     snapshot.docs.map(doc => data.push(doc.data()));
-    // snapshot.docs.map(doc => this.setState({users:[...this.state.array,doc.data()]}));
     this.setState({users:[...this.state.users,...data]})
     console.log(data,this.state.users);
   }
@@ -45,13 +43,13 @@ class HomeBase extends Component {
 
   render() {
     const {user} = this.props;
-    const {location, error} = this.state;
+    const {location, error, users} = this.state;
     console.log(user);
     
     return <React.Fragment>
       <h1>hello {!!user && !!user.displayName ? user.displayName : 'default'}</h1>
 {error && <p>{this.state.error}</p>}
-  {location && <DanceMap location={location}/>};
+  {location && <DanceMap location={location} users={users}/>};
      
     </React.Fragment>
   }
