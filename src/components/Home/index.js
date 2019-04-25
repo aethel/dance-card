@@ -24,11 +24,15 @@ class HomeBase extends Component {
     };
   }
    
-  componentDidMount() {
+  async componentDidMount() {
     this.setState({ loading: true });
-    const uid = sessionStorage.getItem('uid');
-    console.log(uid);
+    const uid = sessionStorage.getItem('uid');    
     this.setUsersLocation(uid);    
+    const snapshot = await this.props.firebase.users().get();
+    const data = [];
+    snapshot.docs.map(doc => data.push(doc.data()));
+    this.setState({users:[...this.state.users,...data]})
+    console.log(data,this.state.users);
   }
 
   setUsersLocation = (uid) => {
@@ -39,12 +43,13 @@ class HomeBase extends Component {
 
   render() {
     const {user} = this.props;
-    const {location, error} = this.state;
+    const {location, error, users} = this.state;
+    console.log(user);
     
     return <React.Fragment>
-      <h1>hello {user ? user.username : 'default'}</h1>
+      <h1>hello {!!user && !!user.displayName ? user.displayName : 'default'}</h1>
 {error && <p>{this.state.error}</p>}
-  {location && <DanceMap location={location}/>};
+  {location && <DanceMap location={location} users={users}/>};
      
     </React.Fragment>
   }
