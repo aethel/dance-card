@@ -32,13 +32,9 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     const uid = sessionStorage.getItem("uid");
     this.setUsersLocation(uid);
-    this.setGeoUsersLocation();
-
-    // const snapshot = await this.props.firebase.users().get();
-    // const data = [];
-    // snapshot.docs.map(doc => data.push(doc.data()));
-    // this.setState({users:[...this.state.users,...data]})
+    this.getUsers();
   }
+
   setUsersLocation = uid => {
     const geoQuery = this.props.firebase.users().where("d.id", "==", uid);
     geoQuery.get().then(
@@ -51,6 +47,19 @@ class HomeBase extends Component {
       },
       error => this.setState({ error })
     );
+  };
+
+  getUsers = () => {
+    const snapshot = this.props.firebase.geoUsers().get();
+    snapshot.then(doc => {
+      let data = [];
+      doc.docs.forEach(item => {
+        data.push(item.data());
+      });
+      this.setState({ users: data });
+      console.log(data);
+      console.log(this.state.users);
+    });
   };
 
   render() {
