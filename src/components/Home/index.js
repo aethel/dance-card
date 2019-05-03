@@ -32,7 +32,7 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     const uid = sessionStorage.getItem("uid");
     this.setUsersLocation(uid);
-    this.getUsers();
+    // this.getUsers();
   }
 
   setUsersLocation = uid => {
@@ -44,13 +44,16 @@ class HomeBase extends Component {
           location = doc.data().d.coordinates;
         });
         this.setState({ location });
+        this.getUsers();
       },
       error => this.setState({ error })
     );
   };
 
   getUsers = () => {
-    const snapshot = this.props.firebase.geoUsers().get();
+    // const query: GeoQuery = geocollection.near({ center: new firebase.firestore.GeoPoint(40.7589, -73.9851), radius: 1000 });
+
+    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 80 }).get();
     snapshot.then(doc => {
       let data = [];
       doc.docs.forEach(item => {

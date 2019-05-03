@@ -50,10 +50,8 @@ class SignUpFormBase extends Component {
           .geoUsers()
           .add(doc)
           .then(docRef => {
-            console.log(docRef);
-            console.log(docRef.id);
-
-            // this.props.firebase.geoUsers().set(docRef.id, {id:docRef.id, ...doc}).then(res => console.log(res)        )
+          }, error => {
+            this.setState({ error })
           });
       })
       .then(authUser => {
