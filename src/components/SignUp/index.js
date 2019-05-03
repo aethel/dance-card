@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import * as ROUTES from '../../constants/routes';
-import { withFirebase } from '../Firebase';
-import withGeolocation from '../Geolocation';
-import GeolocationContext from '../Geolocation/context';
+import React, { Component } from "react";
+import { Link, withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import * as ROUTES from "../../constants/routes";
+import { withFirebase } from "../Firebase";
+import withGeolocation from "../Geolocation";
+import GeolocationContext from "../Geolocation/context";
 // import { geolocated } from 'react-geolocated';
 
 const SignUpPage = () => (
@@ -17,9 +17,9 @@ const SignUpPage = () => (
 );
 
 const INITIAL_STATE = {
-  username: '',
-  email: '',
-  password: '',
+  username: "",
+  email: "",
+  password: "",
   error: null
 };
 
@@ -40,13 +40,19 @@ class SignUpFormBase extends Component {
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
+        const doc = {
+          username,
+          email,
+          coordinates: geoLocation.geoPoint,
+          id: authUser.user.uid
+        };
         return this.props.firebase
-          .users()
-          .doc(authUser.user.uid)
-          .set(
-            { username, email, location: geoLocation.geoPoint },
-            { merge: true }
-          );
+          .geoUsers()
+          .add(doc)
+          .then(docRef => {
+          }, error => {
+            this.setState({ error })
+          });
       })
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });
@@ -61,9 +67,9 @@ class SignUpFormBase extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-    render() {
+  render() {
     const { username, email, password, error } = this.state;
-    const isInvalid = password === '' || email === '' || username === '';    
+    const isInvalid = password === "" || email === "" || username === "";
     return (
       <div>
         <form>

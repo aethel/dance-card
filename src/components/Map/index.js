@@ -31,24 +31,24 @@ export default class DanceMap extends Component {
     }
 
     render() {
-        const {location, users} = this.props;
-        const centre = location ?  Object.values(location) : [this.state.lat, this.state.lng];
-        console.log(users);
-        const userItem = users.filter(user => user.location).map((user) => ({...user, location: Object.values(user.location)})).map((user,index) => <PopupMarker key={index} position={Object.values(user.location)} >{user.username}, {user.email}</PopupMarker> );
-        // const userItem = users.map((user) =>   <PopupMarker position={Object.values(user.location)} >{user.username}, {user.email}</PopupMarker>);
+        const { location, users } = this.props;
+        const centre = location ? Object.values(location) : [this.state.lat, this.state.lng];
+        const userItem = users.filter(user => user.coordinates)
+            .map((user) => ({ ...user, coordinates: Object.values(user.coordinates) }))
+            .map((user, index) => <PopupMarker key={`${user.username}${index}`} position={user.coordinates} >{user.username}, {user.email}</PopupMarker>);
         return (
             <React.Fragment>
 
-            <Map style={{width:'100vw', height: '100vw'}} center={centre} zoom={this.state.zoom}>
-                <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-/>
-                <PopupMarker position={centre} >Is a label</PopupMarker>
-            {userItem}
-            </Map>
+                <Map style={{ width: '100vw', height: '100vw' }} center={centre} zoom={this.state.zoom}>
+                    <TileLayer
+                        attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
+                        url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                    />
+                    <PopupMarker position={centre} >Is a label</PopupMarker>
+                    {userItem}
+                </Map>
 
-          </React.Fragment>
+            </React.Fragment>
         )
     }
 }

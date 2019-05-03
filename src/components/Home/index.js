@@ -1,8 +1,12 @@
-import React, { Component } from 'react';
-import { withFirebase } from '../Firebase';
-import { compose } from 'recompose';
-import { withAuthorisation, withAuthentication, AuthUserContext } from '../Session';
-import DanceMap from '../Map';
+import React, { Component } from "react";
+import { withFirebase } from "../Firebase";
+import { compose } from "recompose";
+import {
+  withAuthorisation,
+  withAuthentication,
+  AuthUserContext
+} from "../Session";
+import DanceMap from "../Map";
 
 const HomePage = () => (
   <section>
@@ -23,38 +27,62 @@ class HomeBase extends Component {
       location: null
     };
   }
-   
+
   async componentDidMount() {
     this.setState({ loading: true });
-    const uid = sessionStorage.getItem('uid');    
-    this.setUsersLocation(uid);    
-    const snapshot = await this.props.firebase.users().get();
-    const data = [];
-    snapshot.docs.map(doc => data.push(doc.data()));
-    this.setState({users:[...this.state.users,...data]})
-    console.log(data,this.state.users);
+    const uid = sessionStorage.getItem("uid");
+    this.setUsersLocation(uid);
+    // this.getUsers();
   }
 
-  setUsersLocation = (uid) => {
-    this.props.firebase.user(uid).get().then(res => {      
-      this.setState({location: res.data().location})
-    }, error => this.setState({error}));    
+  setUsersLocation = uid => {
+    const geoQuery = this.props.firebase.users().where("d.id", "==", uid);
+    geoQuery.get().then(
+      res => {
+        let location = null;
+        res.forEach(function (doc) {
+          location = doc.data().d.coordinates;
+        });
+        this.setState({ location });
+        this.getUsers();
+      },
+      error => this.setState({ error })
+    );
+  };
+
+  getUsers = () => {
+    // const query: GeoQuery = geocollection.near({ center: new firebase.firestore.GeoPoint(40.7589, -73.9851), radius: 1000 });
+
+    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 80 }).get();
+    snapshot.then(doc => {
+      let data = [];
+      doc.docs.forEach(item => {
+        data.push(item.data());
+      });
+      this.setState({ users: data });
+    });
   };
 
   render() {
-    const {user} = this.props;
-    const {location, error, users} = this.state;
-    console.log(user);
-    
-    return <React.Fragment>
-      <h1>hello {!!user && !!user.displayName ? user.displayName : 'default'}</h1>
-{error && <p>{this.state.error}</p>}
-  {location && <DanceMap location={location} users={users}/>};
-     
-    </React.Fragment>
+    const { user } = this.props;
+    const { location, error, users } = this.state;
+
+    return (
+      <React.Fragment>
+        <h1>
+          hello {!!user && !!user.displayName ? user.displayName : "default"}
+        </h1>
+        {error && <p>{this.state.error}</p>}
+        {location && <DanceMap location={location} users={users} />};
+      </React.Fragment>
+    );
   }
 }
 
-const Home = compose(withFirebase, withAuthentication, withAuthorisation(condition))(HomeBase);
+const Home = compose(
+  withFirebase,
+  withAuthentication,
+  withAuthorisation(condition)
+)(HomeBase);
 
 export default HomePage;
