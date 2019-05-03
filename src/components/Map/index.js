@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Map, TileLayer, Marker, Popup } from 'react-leaflet'
+import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 
 import L from 'leaflet';
@@ -45,6 +45,10 @@ export default class DanceMap extends Component {
                         url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                     />
                     <PopupMarker position={centre} >Is a label</PopupMarker>
+                    <Circle
+                        center={{ lat: centre[0], lng: centre[1] }}
+                        fillColor="blue"
+                        radius={100000} />
                     {userItem}
                 </Map>
 

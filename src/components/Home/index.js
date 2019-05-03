@@ -51,9 +51,7 @@ class HomeBase extends Component {
   };
 
   getUsers = () => {
-    // const query: GeoQuery = geocollection.near({ center: new firebase.firestore.GeoPoint(40.7589, -73.9851), radius: 1000 });
-
-    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 80 }).get();
+    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 100 }).get();
     snapshot.then(doc => {
       let data = [];
       doc.docs.forEach(item => {
