@@ -40,7 +40,7 @@ class HomeBase extends Component {
     geoQuery.get().then(
       res => {
         let location = null;
-        res.forEach(function(doc) {
+        res.forEach(function (doc) {
           location = doc.data().d.coordinates;
         });
         this.setState({ location });
@@ -57,8 +57,6 @@ class HomeBase extends Component {
         data.push(item.data());
       });
       this.setState({ users: data });
-      console.log(data);
-      console.log(this.state.users);
     });
   };
 
