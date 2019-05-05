@@ -7,12 +7,18 @@ import {
   AuthUserContext
 } from "../Session";
 import DanceMap from "../Map";
+import withGeolocation from "../Geolocation";
+import GeolocationContext from "../Geolocation/context";
 
 const HomePage = () => (
   <section>
-    <AuthUserContext.Consumer>
-      {authUser => <Home user={authUser} />}
-    </AuthUserContext.Consumer>
+    <GeolocationContext.Consumer>
+      {location => (
+        <AuthUserContext.Consumer>
+          {authUser => <Home geolocation={location} user={authUser} />}
+        </AuthUserContext.Consumer>
+      )}
+    </GeolocationContext.Consumer>
   </section>
 );
 
@@ -33,6 +39,13 @@ class HomeBase extends Component {
     const uid = sessionStorage.getItem("uid");
     this.setUsersLocation(uid);
     // this.setUsers();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.geolocation.location !== prevProps.geolocation.location) {
+      this.setState({ location: this.props.geolocation.location })
+      console.log(this.state, 'didupdate');
+    }
   }
 
   setUsersLocation = uid => {
@@ -64,7 +77,7 @@ class HomeBase extends Component {
   render() {
     const { user } = this.props;
     const { location, error, users } = this.state;
-
+    // console.log(geolocation);
     return (
       <React.Fragment>
         <h1>
@@ -83,4 +96,4 @@ const Home = compose(
   withAuthorisation(condition)
 )(HomeBase);
 
-export default HomePage;
+export default withGeolocation(HomePage);
