@@ -44,7 +44,6 @@ class HomeBase extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.geolocation.location !== prevProps.geolocation.location) {
       this.setState({ location: this.props.geolocation.location })
-      console.log(this.state, 'didupdate');
     }
   }
 
@@ -77,7 +76,6 @@ class HomeBase extends Component {
   render() {
     const { user } = this.props;
     const { location, error, users } = this.state;
-    // console.log(geolocation);
     return (
       <React.Fragment>
         <h1>

@@ -9,28 +9,27 @@ const UserDetailsFormPage = () => (
     <UserDetailstForm />
   </div>
 );
-/*
-active
-status
-dances
-  dance 1
-    lead
-    follow
-  dance 2
-    lead
-    follow
-  dance 3
-    lead
-    follow
 
-*/
 const INITIAL_STATE = {
   email: '',
   error: null,
   active: false,
-  status: null,
-  dances: []
+  status: null
 };
+
+const DANCES = [
+  'lindy hop',
+  'blues',
+  'fuston',
+  'balboa',
+  'collegiate shag',
+  'salsa',
+  'bachata',
+  'tango',
+  'kizomba',
+  'bal folk'
+]
+
 
 class UserDetailstFormBase extends Component {
   constructor(props) {
@@ -50,16 +49,40 @@ class UserDetailstFormBase extends Component {
     this.setState({ [event.target.name]: event.target.value });
 
   render() {
-    const { email, error } = this.state;
+    const { error } = this.state;
+    const danceListItem = DANCES.map((dance, index) => {
+      return (<li key={`${dance}${index}`}>
+        <span>{dance}</span>
+        <label>
+          Lead
+          <input type="checkbox" name={`${dance}Lead`} />
+        </label>
+        <label>
+          Follow
+          <input type="checkbox" name={`${dance}Follow`} />
+        </label>
+      </li>)
+    })
     return (
       <form onSubmit={this.onSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={this.onChange}
-          placeholder="Email"
-        />
-        <button type="submit">Reset</button>
+        <fieldset>
+          <legend>Personal info</legend>
+          <label>
+            User name
+          <input type="text" name="username" placeholder="User name" />
+          </label>
+          <label>
+            Active
+          <input type="checkbox" name="active" />
+          </label>
+        </fieldset>
+        <fieldset>
+          <legend>Your scene</legend>
+          <ul>
+            {danceListItem}
+          </ul>
+        </fieldset>
+        <button type="submit">Update</button>
         {error && <p>{error.message}</p>}
       </form>
     );
