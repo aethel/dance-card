@@ -32,7 +32,7 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     const uid = sessionStorage.getItem("uid");
     this.setUsersLocation(uid);
-    // this.getUsers();
+    // this.setUsers();
   }
 
   setUsersLocation = uid => {
@@ -44,13 +44,13 @@ class HomeBase extends Component {
           location = doc.data().d.coordinates;
         });
         this.setState({ location });
-        this.getUsers();
+        this.setUsers();
       },
       error => this.setState({ error })
     );
   };
 
-  getUsers = () => {
+  setUsers = () => {
     const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 100 }).get();
     snapshot.then(doc => {
       let data = [];
