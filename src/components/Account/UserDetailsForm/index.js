@@ -5,7 +5,7 @@ import * as ROUTES from '../../../constants/routes';
 
 const UserDetailsFormPage = () => (
   <div>
-    <h1>'User Details'</h1>
+    <h1>User Details</h1>
     <UserDetailstForm />
   </div>
 );
@@ -45,6 +45,10 @@ class UserDetailstFormBase extends Component {
       .catch(error => this.setState({ error }));
   };
 
+  handleDanceObjectChange = (e) => {
+    console.log(e);
+  }
+
   onChange = event =>
     this.setState({ [event.target.name]: event.target.value });
 
@@ -55,11 +59,11 @@ class UserDetailstFormBase extends Component {
         <span>{dance}</span>
         <label>
           Lead
-          <input type="checkbox" name={`${dance}Lead`} />
+          <input type="checkbox" name={`${dance}Lead`} onChange={this.handleDanceObjectChange(this)} />
         </label>
         <label>
           Follow
-          <input type="checkbox" name={`${dance}Follow`} />
+          <input type="checkbox" name={`${dance}Follow`} onChange={this.handleDanceObjectChange(this)} />
         </label>
       </li>)
     })

@@ -9,7 +9,7 @@ import {
 import DanceMap from "../Map";
 import withGeolocation from "../Geolocation";
 import GeolocationContext from "../Geolocation/context";
-
+import { debounce } from 'throttle-debounce'
 const HomePage = () => (
   <section>
     <GeolocationContext.Consumer>
@@ -30,8 +30,11 @@ class HomeBase extends Component {
     this.state = {
       loading: false,
       users: [],
-      location: null
+      location: null,
+      radius: 50
     };
+
+    this.radiusUpdateDebounced = debounce(3000, this.onRadiusChange);
   }
 
   async componentDidMount() {
@@ -43,9 +46,21 @@ class HomeBase extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.geolocation.location !== prevProps.geolocation.location) {
-      this.setState({ location: this.props.geolocation.location })
+      this.setState({ location: this.props.firebase.geoPoint(this.props.geolocation.location.lat, this.props.geolocation.location.lng) })
     }
   }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log(prevState.radius, this.state.radius);
+    if (prevState.radius !== this.state.radius) {
+      this.setUsers()
+    }
+  }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log(this.state.radius, nextState.radius, this.state.radius !== nextState.radius);
+  //   return !!nextState.radius && this.state.radius !== nextState.radius ? true : false
+  // }
 
   setUsersLocation = uid => {
     const geoQuery = this.props.firebase.users().where("d.id", "==", uid);
@@ -63,7 +78,7 @@ class HomeBase extends Component {
   };
 
   setUsers = () => {
-    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 100 }).get();
+    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: this.state.radius }).get();
     snapshot.then(doc => {
       let data = [];
       doc.docs.forEach(item => {
@@ -73,15 +88,30 @@ class HomeBase extends Component {
     });
   };
 
+  onRadiusChange = (event) => {
+    if (!event || !event.target) {
+      return;
+    }
+    this.setState({ radius: +event.target.value }, () => {
+      this.radiusUpdateDebounced(this.state.radius)
+    })
+    console.log(this.state.radius);
+
+  }
+
   render() {
     const { user } = this.props;
-    const { location, error, users } = this.state;
+    const { location, error, users, radius } = this.state;
     return (
       <React.Fragment>
         <h1>
           hello {!!user && !!user.displayName ? user.displayName : "default"}
         </h1>
         {error && <p>{this.state.error}</p>}
+        <label>
+          Radius (km)
+        <input type="range" name="range" step="1" defaultValue={radius} onChange={this.onRadiusChange} min="2" max="100" />
+        </label>
         {location && <DanceMap location={location} users={users} />};
       </React.Fragment>
     );
