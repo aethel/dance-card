@@ -109,10 +109,10 @@ class HomeBase extends Component {
         </h1>
         {error && <p>{this.state.error}</p>}
         <label>
-          Radius (km)
+          Radius {this.state.radius} (km)
         <input type="range" name="range" step="1" defaultValue={radius} onChange={this.onRadiusChange} min="2" max="100" />
         </label>
-        {location && <DanceMap location={location} users={users} />};
+        {location && <DanceMap radius={radius} location={location} users={users} />};
       </React.Fragment>
     );
   }
