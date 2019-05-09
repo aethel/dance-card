@@ -14,7 +14,8 @@ const INITIAL_STATE = {
   email: '',
   error: null,
   active: false,
-  status: null
+  status: null,
+  dances: new Map()
 };
 
 const DANCES = [
@@ -38,15 +39,21 @@ class UserDetailstFormBase extends Component {
   }
 
   onSubmit = event => {
-    const { email } = this.state;
-    this.props.firebase
-      .doPasswordReset(email)
-      .then(() => this.setState({ ...INITIAL_STATE }))
-      .catch(error => this.setState({ error }));
+    // const { email } = this.state;
+    // this.props.firebase
+    //   .doPasswordReset(email)
+    //   .then(() => this.setState({ ...INITIAL_STATE }))
+    //   .catch(error => this.setState({ error }));
   };
 
   handleDanceObjectChange = (e) => {
-    console.log(e);
+    console.log(e, e.target, e.target.dataset);
+    const dance = e.target.name;
+    const isChecked = e.target.checked;
+    const position = Object.keys(e.target.dataset)[0];
+    // stop overwriting props
+    this.setState({ dances: this.state.dances.set(dance, { [position]: isChecked }) });
+    console.log(this.state.dances);
   }
 
   onChange = event =>
@@ -59,11 +66,11 @@ class UserDetailstFormBase extends Component {
         <span>{dance}</span>
         <label>
           Lead
-          <input type="checkbox" name={`${dance}Lead`} onChange={this.handleDanceObjectChange(this)} />
+          <input type="checkbox" data-lead="lead" defaultChecked name={dance} onChange={this.handleDanceObjectChange} />
         </label>
         <label>
           Follow
-          <input type="checkbox" name={`${dance}Follow`} onChange={this.handleDanceObjectChange(this)} />
+          <input type="checkbox" data-follow="follow" defaultChecked name={dance} onChange={this.handleDanceObjectChange} />
         </label>
       </li>)
     })

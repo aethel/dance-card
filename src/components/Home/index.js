@@ -9,7 +9,7 @@ import {
 import DanceMap from "../Map";
 import withGeolocation from "../Geolocation";
 import GeolocationContext from "../Geolocation/context";
-import { debounce } from 'throttle-debounce'
+
 const HomePage = () => (
   <section>
     <GeolocationContext.Consumer>
@@ -33,8 +33,6 @@ class HomeBase extends Component {
       location: null,
       radius: 50
     };
-
-    this.radiusUpdateDebounced = debounce(3000, this.onRadiusChange);
   }
 
   async componentDidMount() {
