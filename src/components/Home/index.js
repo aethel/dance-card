@@ -90,9 +90,7 @@ class HomeBase extends Component {
     if (!event || !event.target) {
       return;
     }
-    this.setState({ radius: +event.target.value }, () => {
-      this.radiusUpdateDebounced(this.state.radius)
-    })
+    this.setState({ radius: +event.target.value })
     console.log(this.state.radius);
 
   }

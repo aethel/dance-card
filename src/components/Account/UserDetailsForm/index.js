@@ -52,9 +52,21 @@ class UserDetailstFormBase extends Component {
     const isChecked = e.target.checked;
     const position = Object.keys(e.target.dataset)[0];
     // stop overwriting props
-    this.setState({ dances: this.state.dances.set(dance, { [position]: isChecked }) });
-    console.log(this.state.dances);
+    const tempDance = this.state.dances;
+    if (tempDance.get(dance)) {
+      console.log('exists');
+      let danceObj = tempDance.get(dance);
+      danceObj = { ...danceObj, ...{ [position]: isChecked } };
+      tempDance.set(dance, danceObj);
+    } else {
+      tempDance.set(dance, { [position]: isChecked })
+    }
+
+    this.setState({ dances: tempDance })
+    console.log(this.state);
   }
+  // this.setState({ dances: this.state.dances.set(dance, { [position]: isChecked }) });
+
 
   onChange = event =>
     this.setState({ [event.target.name]: event.target.value });
