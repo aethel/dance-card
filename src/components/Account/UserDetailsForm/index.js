@@ -12,8 +12,9 @@ const UserDetailsFormPage = () => (
 
 const INITIAL_STATE = {
   email: '',
+  username: '',
   error: null,
-  active: false,
+  active: true,
   status: null,
   dances: new Map()
 };
@@ -39,12 +40,14 @@ class UserDetailstFormBase extends Component {
   }
 
   onSubmit = event => {
-    // const { email } = this.state;
-    // this.props.firebase
-    //   .doPasswordReset(email)
-    //   .then(() => this.setState({ ...INITIAL_STATE }))
-    //   .catch(error => this.setState({ error }));
+    event.preventDefault();
+    console.log(this.state, event);
   };
+
+  handleActiveCheckbox = () => {
+    this.setState({ active: !this.state.active })
+    console.log(this.state);
+  }
 
   handleDanceObjectChange = (e) => {
     console.log(e, e.target, e.target.dataset);
@@ -65,14 +68,17 @@ class UserDetailstFormBase extends Component {
     this.setState({ dances: tempDance })
     console.log(this.state);
   }
-  // this.setState({ dances: this.state.dances.set(dance, { [position]: isChecked }) });
 
 
-  onChange = event =>
-    this.setState({ [event.target.name]: event.target.value });
+  onChange = event => {
+    console.log(this.state.active);
+    const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    this.setState({ [event.target.name]: value });
+    console.log(this.state.active);
 
+  }
   render() {
-    const { error } = this.state;
+    const { error, username, active } = this.state;
     const danceListItem = DANCES.map((dance, index) => {
       return (<li key={`${dance}${index}`}>
         <span>{dance}</span>
@@ -92,11 +98,11 @@ class UserDetailstFormBase extends Component {
           <legend>Personal info</legend>
           <label>
             User name
-          <input type="text" name="username" placeholder="User name" />
+          <input type="text" name="username" value={username} placeholder="User name" onChange={this.onChange} />
           </label>
           <label>
             Active
-          <input type="checkbox" name="active" />
+          <input type="checkbox" name="active" checked={active} onChange={this.handleActiveCheckbox} />
           </label>
         </fieldset>
         <fieldset>
