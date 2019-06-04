@@ -1,22 +1,27 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { withFirebase } from '../../Firebase';
-import * as ROUTES from '../../../constants/routes';
+// import * as ROUTES from '../../../constants/routes';
+import { compose } from "recompose";
+import { withAuthentication, AuthUserContext } from '../../Session';
 
-const UserDetailsFormPage = () => (
+const UserDetailsFormPage = (user) => (
   <div>
     <h1>User Details</h1>
-    <UserDetailstForm />
+    <AuthUserContext.Consumer>
+      {authUser => <UserDetailstForm user={authUser} />}
+    </AuthUserContext.Consumer>
   </div>
 );
 
 const INITIAL_STATE = {
   email: '',
-  username: '',
+  username: 'test',
   error: null,
   active: true,
   status: null,
-  dances: new Map()
+  dances: new Map(),
+  docID: null
 };
 
 const DANCES = [
@@ -32,6 +37,16 @@ const DANCES = [
   'bal folk'
 ]
 
+const strMapToObj = (strMap) => {
+  let obj = Object.create(null);
+  for (let [k, v] of strMap) {
+    // We don’t escape the key '__proto__'
+    // which can cause problems on older engines
+    obj[k] = v;
+  }
+  return obj;
+}
+
 
 class UserDetailstFormBase extends Component {
   constructor(props) {
@@ -39,10 +54,55 @@ class UserDetailstFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
+
+  componentDidMount() {
+    const { user: { uid } } = this.props;
+    // console.log(uid, 'userd');
+    const geoQuery = this.props.firebase.geoUsers();
+    geoQuery.get().then(
+
+      res => {
+
+        let username = null;
+        let docID = null;
+        res.forEach(function (doc) {
+          if (doc.data().id === uid) {
+            docID = doc.id;
+            username = doc.data().username;
+          }
+        });
+        username && this.setState({ username, docID })
+      },
+      error => this.setState({ error })
+    );
+
+  }
+
+
   onSubmit = event => {
     event.preventDefault();
-    console.log(this.state, event);
+    const doc = {
+      username: this.state.username,
+      email: this.state.email,
+      dances: strMapToObj(this.state.dances),
+      active: this.state.active
+    };
+    const { docID } = this.state;
+    const docRef = this.props.firebase.geoUsers().doc(docID);
+    console.log(docRef);
+
+    docRef.set(doc, { merge: true }).then(updateResult => console.log(updateResult));
+
+    console.log(this.state, doc);
   };
+
+  // function objToStrMap(obj) {
+  //   let strMap = new Map();
+  //   for (let k of Object.keys(obj)) {
+  //     strMap.set(k, obj[k]);
+  //   }
+  //   return strMap;
+  // }
 
   handleActiveCheckbox = () => {
     this.setState({ active: !this.state.active })
@@ -50,14 +110,13 @@ class UserDetailstFormBase extends Component {
   }
 
   handleDanceObjectChange = (e) => {
-    console.log(e, e.target, e.target.dataset);
+    console.log(this.props);
+
     const dance = e.target.name;
     const isChecked = e.target.checked;
     const position = Object.keys(e.target.dataset)[0];
-    // stop overwriting props
     const tempDance = this.state.dances;
     if (tempDance.get(dance)) {
-      console.log('exists');
       let danceObj = tempDance.get(dance);
       danceObj = { ...danceObj, ...{ [position]: isChecked } };
       tempDance.set(dance, danceObj);
@@ -71,14 +130,15 @@ class UserDetailstFormBase extends Component {
 
 
   onChange = event => {
-    console.log(this.state.active);
     const value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
     this.setState({ [event.target.name]: value });
-    console.log(this.state.active);
-
   }
+
   render() {
     const { error, username, active } = this.state;
+    console.log(this.props, 'auth');
+    console.log(this.props.user.uid, 'auth');
+
     const danceListItem = DANCES.map((dance, index) => {
       return (<li key={`${dance}${index}`}>
         <span>{dance}</span>
@@ -94,6 +154,7 @@ class UserDetailstFormBase extends Component {
     })
     return (
       <form onSubmit={this.onSubmit}>
+        {this.state.username} username
         <fieldset>
           <legend>Personal info</legend>
           <label>
@@ -118,14 +179,7 @@ class UserDetailstFormBase extends Component {
   }
 }
 
-const PasswordForgetLink = () => (
-  <p>
-    <Link to={ROUTES.PASSWORD_FORGET}>Forgot Password?</Link>
-  </p>
-);
-
-const UserDetailstForm = withFirebase(UserDetailstFormBase);
+const UserDetailstForm = compose(withFirebase, withAuthentication)(UserDetailstFormBase);
 
 export default UserDetailsFormPage;
 
-export { UserDetailstForm, PasswordForgetLink };

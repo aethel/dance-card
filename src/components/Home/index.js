@@ -62,10 +62,13 @@ class HomeBase extends Component {
 
   setUsersLocation = uid => {
     const geoQuery = this.props.firebase.users().where("d.id", "==", uid);
+    console.log(uid, 'home');
     geoQuery.get().then(
       res => {
         let location = null;
         res.forEach(function (doc) {
+          console.log(doc.data(), 'home');
+
           location = doc.data().d.coordinates;
         });
         this.setState({ location });
