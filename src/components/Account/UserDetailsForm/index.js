@@ -4,6 +4,7 @@ import { withFirebase } from '../../Firebase';
 // import * as ROUTES from '../../../constants/routes';
 import { compose } from "recompose";
 import { withAuthentication, AuthUserContext } from '../../Session';
+import dances from './dances-map';
 
 const UserDetailsFormPage = (user) => (
   <div>
@@ -24,29 +25,22 @@ const INITIAL_STATE = {
   docID: null
 };
 
-const DANCES = [
-  'lindy hop',
-  'blues',
-  'fuston',
-  'balboa',
-  'collegiate shag',
-  'salsa',
-  'bachata',
-  'tango',
-  'kizomba',
-  'bal folk'
-]
 
 const strMapToObj = (strMap) => {
   let obj = Object.create(null);
   for (let [k, v] of strMap) {
-    // We don’t escape the key '__proto__'
-    // which can cause problems on older engines
     obj[k] = v;
   }
   return obj;
 }
 
+const objToStrMap = (obj) => {
+  let strMap = new Map();
+  for (let k of Object.keys(obj)) {
+    strMap.set(k, obj[k]);
+  }
+  return strMap;
+}
 
 class UserDetailstFormBase extends Component {
   constructor(props) {
@@ -65,13 +59,16 @@ class UserDetailstFormBase extends Component {
 
         let username = null;
         let docID = null;
+        let dances = null;
+
         res.forEach(function (doc) {
           if (doc.data().id === uid) {
             docID = doc.id;
             username = doc.data().username;
+            dances = doc.data().dances && objToStrMap(doc.data().dances);
           }
         });
-        username && this.setState({ username, docID })
+        username && this.setState({ username, docID, dances })
       },
       error => this.setState({ error })
     );
@@ -96,13 +93,7 @@ class UserDetailstFormBase extends Component {
     console.log(this.state, doc);
   };
 
-  // function objToStrMap(obj) {
-  //   let strMap = new Map();
-  //   for (let k of Object.keys(obj)) {
-  //     strMap.set(k, obj[k]);
-  //   }
-  //   return strMap;
-  // }
+
 
   handleActiveCheckbox = () => {
     this.setState({ active: !this.state.active })
@@ -135,20 +126,22 @@ class UserDetailstFormBase extends Component {
   }
 
   render() {
-    const { error, username, active } = this.state;
-    console.log(this.props, 'auth');
-    console.log(this.props.user.uid, 'auth');
+    const { error, username, active, dances } = this.state;
+    console.log(dances);
 
+    debugger
     const danceListItem = DANCES.map((dance, index) => {
+      const danceObj = dances.get(dance);
+
       return (<li key={`${dance}${index}`}>
         <span>{dance}</span>
         <label>
           Lead
-          <input type="checkbox" data-lead="lead" defaultChecked name={dance} onChange={this.handleDanceObjectChange} />
+          <input type="checkbox" data-lead="lead" defaultChecked={danceObj.lead} name={dance} onChange={this.handleDanceObjectChange} />
         </label>
         <label>
           Follow
-          <input type="checkbox" data-follow="follow" defaultChecked name={dance} onChange={this.handleDanceObjectChange} />
+          <input type="checkbox" data-follow="follow" defaultChecked={danceObj.follow} name={dance} onChange={this.handleDanceObjectChange} />
         </label>
       </li>)
     })
