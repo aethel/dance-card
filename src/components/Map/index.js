@@ -26,12 +26,13 @@ export default class DanceMap extends Component {
         this.state = {
             lat: 45.6982642,
             lng: 9.6772698,
-            zoom: 13
+            zoom: 13,
+            radius: 1000
         }
     }
 
     render() {
-        const { location, users } = this.props;
+        const { location, users, radius } = this.props;
         const centre = location ? Object.values(location) : [this.state.lat, this.state.lng];
         const userItem = users.filter(user => user.coordinates)
             .map((user) => ({ ...user, coordinates: Object.values(user.coordinates) }))
@@ -48,7 +49,7 @@ export default class DanceMap extends Component {
                     <Circle
                         center={{ lat: centre[0], lng: centre[1] }}
                         fillColor="blue"
-                        radius={100000} />
+                        radius={radius * 1000 || this.state.radius} />
                     {userItem}
                 </Map>
 

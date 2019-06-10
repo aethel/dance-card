@@ -7,12 +7,18 @@ import {
   AuthUserContext
 } from "../Session";
 import DanceMap from "../Map";
+import withGeolocation from "../Geolocation";
+import GeolocationContext from "../Geolocation/context";
 
 const HomePage = () => (
   <section>
-    <AuthUserContext.Consumer>
-      {authUser => <Home user={authUser} />}
-    </AuthUserContext.Consumer>
+    <GeolocationContext.Consumer>
+      {location => (
+        <AuthUserContext.Consumer>
+          {authUser => <Home geolocation={location} user={authUser} />}
+        </AuthUserContext.Consumer>
+      )}
+    </GeolocationContext.Consumer>
   </section>
 );
 
@@ -24,7 +30,8 @@ class HomeBase extends Component {
     this.state = {
       loading: false,
       users: [],
-      location: null
+      location: null,
+      radius: 50
     };
   }
 
@@ -32,26 +39,47 @@ class HomeBase extends Component {
     this.setState({ loading: true });
     const uid = sessionStorage.getItem("uid");
     this.setUsersLocation(uid);
-    // this.getUsers();
+    // this.setUsers();
   }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.geolocation.location !== prevProps.geolocation.location) {
+      this.setState({ location: this.props.firebase.geoPoint(this.props.geolocation.location.lat, this.props.geolocation.location.lng) })
+    }
+  }
+
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log(prevState.radius, this.state.radius);
+    if (prevState.radius !== this.state.radius) {
+      this.setUsers()
+    }
+  }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log(this.state.radius, nextState.radius, this.state.radius !== nextState.radius);
+  //   return !!nextState.radius && this.state.radius !== nextState.radius ? true : false
+  // }
 
   setUsersLocation = uid => {
     const geoQuery = this.props.firebase.users().where("d.id", "==", uid);
+    console.log(uid, 'home');
     geoQuery.get().then(
       res => {
         let location = null;
         res.forEach(function (doc) {
+          console.log(doc.data(), 'home');
+
           location = doc.data().d.coordinates;
         });
         this.setState({ location });
-        this.getUsers();
+        this.setUsers();
       },
       error => this.setState({ error })
     );
   };
 
-  getUsers = () => {
-    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: 100 }).get();
+  setUsers = () => {
+    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: this.state.radius }).get();
     snapshot.then(doc => {
       let data = [];
       doc.docs.forEach(item => {
@@ -61,17 +89,29 @@ class HomeBase extends Component {
     });
   };
 
+  onRadiusChange = (event) => {
+    if (!event || !event.target) {
+      return;
+    }
+    this.setState({ radius: +event.target.value })
+    console.log(this.state.radius);
+
+  }
+
   render() {
     const { user } = this.props;
-    const { location, error, users } = this.state;
-
+    const { location, error, users, radius } = this.state;
     return (
       <React.Fragment>
         <h1>
           hello {!!user && !!user.displayName ? user.displayName : "default"}
         </h1>
         {error && <p>{this.state.error}</p>}
-        {location && <DanceMap location={location} users={users} />};
+        <label>
+          Radius {this.state.radius} (km)
+        <input type="range" name="range" step="1" defaultValue={radius} onChange={this.onRadiusChange} min="2" max="100" />
+        </label>
+        {location && <DanceMap radius={radius} location={location} users={users} />};
       </React.Fragment>
     );
   }
@@ -83,4 +123,4 @@ const Home = compose(
   withAuthorisation(condition)
 )(HomeBase);
 
-export default HomePage;
+export default withGeolocation(HomePage);
