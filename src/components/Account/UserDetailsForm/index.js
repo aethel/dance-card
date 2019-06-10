@@ -21,7 +21,7 @@ const INITIAL_STATE = {
   error: null,
   active: true,
   status: null,
-  dances: new Map(),
+  dances: dances,
   docID: null
 };
 
@@ -51,7 +51,6 @@ class UserDetailstFormBase extends Component {
 
   componentDidMount() {
     const { user: { uid } } = this.props;
-    // console.log(uid, 'userd');
     const geoQuery = this.props.firebase.geoUsers();
     geoQuery.get().then(
 
@@ -68,7 +67,20 @@ class UserDetailstFormBase extends Component {
             dances = doc.data().dances && objToStrMap(doc.data().dances);
           }
         });
-        username && this.setState({ username, docID, dances })
+        // console.log(this.state.dances);
+        // console.log(dances);
+        // console.log(new Map([...this.state.dances, ...dances]));
+        if (username) {
+          this.setState({ username })
+        }
+        if (docID) {
+          this.setState({ docID })
+        }
+        if (dances) {
+          this.setState({ dances: new Map([...dances]) })
+          console.log(this.state.dances);
+
+        }
       },
       error => this.setState({ error })
     );
@@ -127,21 +139,18 @@ class UserDetailstFormBase extends Component {
 
   render() {
     const { error, username, active, dances } = this.state;
-    console.log(dances);
-
-    debugger
-    const danceListItem = DANCES.map((dance, index) => {
-      const danceObj = dances.get(dance);
-
-      return (<li key={`${dance}${index}`}>
-        <span>{dance}</span>
+    const danceListItem = Array.from(dances).map((dance, index) => {
+      const danceName = dance[0];
+      const dancePosition = dance[1];
+      return (<li key={`${danceName}${index}`}>
+        <span>{danceName}</span>
         <label>
           Lead
-          <input type="checkbox" data-lead="lead" defaultChecked={danceObj.lead} name={dance} onChange={this.handleDanceObjectChange} />
+          <input type="checkbox" data-lead="lead" defaultChecked={dancePosition.lead} name={danceName} onChange={this.handleDanceObjectChange} />
         </label>
         <label>
           Follow
-          <input type="checkbox" data-follow="follow" defaultChecked={danceObj.follow} name={dance} onChange={this.handleDanceObjectChange} />
+          <input type="checkbox" data-follow="follow" defaultChecked={dancePosition.follow} name={danceName} onChange={this.handleDanceObjectChange} />
         </label>
       </li>)
     })
