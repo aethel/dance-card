@@ -59,27 +59,27 @@ class UserDetailstFormBase extends Component {
         let username = null;
         let docID = null;
         let dances = null;
+        let isActive = null;
 
         res.forEach(function (doc) {
           if (doc.data().id === uid) {
             docID = doc.id;
             username = doc.data().username;
+            isActive = doc.data().active;
             dances = doc.data().dances && objToStrMap(doc.data().dances);
           }
         });
-        // console.log(this.state.dances);
-        // console.log(dances);
-        // console.log(new Map([...this.state.dances, ...dances]));
         if (username) {
           this.setState({ username })
         }
         if (docID) {
           this.setState({ docID })
         }
+        if (isActive !== undefined || isActive !== null) {
+          this.setState({ active: isActive })
+        }
         if (dances) {
           this.setState({ dances: new Map([...dances]) })
-          console.log(this.state.dances);
-
         }
       },
       error => this.setState({ error })
@@ -98,23 +98,14 @@ class UserDetailstFormBase extends Component {
     };
     const { docID } = this.state;
     const docRef = this.props.firebase.geoUsers().doc(docID);
-    console.log(docRef);
-
     docRef.set(doc, { merge: true }).then(updateResult => console.log(updateResult));
-
-    console.log(this.state, doc);
   };
-
-
 
   handleActiveCheckbox = () => {
     this.setState({ active: !this.state.active })
-    console.log(this.state);
   }
 
   handleDanceObjectChange = (e) => {
-    console.log(this.props);
-
     const dance = e.target.name;
     const isChecked = e.target.checked;
     const position = Object.keys(e.target.dataset)[0];
@@ -156,7 +147,6 @@ class UserDetailstFormBase extends Component {
     })
     return (
       <form onSubmit={this.onSubmit}>
-        {this.state.username} username
         <fieldset>
           <legend>Personal info</legend>
           <label>
