@@ -36,10 +36,8 @@ class HomeBase extends Component {
   }
 
   async componentDidMount() {
-    this.setState({ loading: true });
     const uid = sessionStorage.getItem('uid');
     this.setUsersLocation(uid);
-    // this.setUsers();
   }
 
   componentDidUpdate(prevProps) {
@@ -54,16 +52,10 @@ class HomeBase extends Component {
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
-    console.log(prevState.radius, this.state.radius);
     if (prevState.radius !== this.state.radius) {
       this.setUsers();
     }
   }
-
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log(this.state.radius, nextState.radius, this.state.radius !== nextState.radius);
-  //   return !!nextState.radius && this.state.radius !== nextState.radius ? true : false
-  // }
 
   setUsersLocation = uid => {
     const geoQuery = this.props.firebase.users().where('d.id', '==', uid);
