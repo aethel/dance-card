@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { withFirebase } from "../Firebase";
-import { compose } from "recompose";
+import React, { Component } from 'react';
+import { withFirebase } from '../Firebase';
+import { compose } from 'recompose';
 import {
   withAuthorisation,
   withAuthentication,
   AuthUserContext
-} from "../Session";
-import DanceMap from "../Map";
-import withGeolocation from "../Geolocation";
-import GeolocationContext from "../Geolocation/context";
+} from '../Session';
+import DanceMap from '../Map';
+import withGeolocation from '../Geolocation';
+import GeolocationContext from '../Geolocation/context';
 
 const HomePage = () => (
   <section>
@@ -36,37 +36,34 @@ class HomeBase extends Component {
   }
 
   async componentDidMount() {
-    this.setState({ loading: true });
-    const uid = sessionStorage.getItem("uid");
+    const uid = sessionStorage.getItem('uid');
     this.setUsersLocation(uid);
-    // this.setUsers();
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.geolocation.location !== prevProps.geolocation.location) {
-      this.setState({ location: this.props.firebase.geoPoint(this.props.geolocation.location.lat, this.props.geolocation.location.lng) })
+      this.setState({
+        location: this.props.firebase.geoPoint(
+          this.props.geolocation.location.lat,
+          this.props.geolocation.location.lng
+        )
+      });
     }
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
-    console.log(prevState.radius, this.state.radius);
     if (prevState.radius !== this.state.radius) {
-      this.setUsers()
+      this.setUsers();
     }
   }
 
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   console.log(this.state.radius, nextState.radius, this.state.radius !== nextState.radius);
-  //   return !!nextState.radius && this.state.radius !== nextState.radius ? true : false
-  // }
-
   setUsersLocation = uid => {
-    const geoQuery = this.props.firebase.users().where("d.id", "==", uid);
+    const geoQuery = this.props.firebase.users().where('d.id', '==', uid);
     console.log(uid, 'home');
     geoQuery.get().then(
       res => {
         let location = null;
-        res.forEach(function (doc) {
+        res.forEach(function(doc) {
           console.log(doc.data(), 'home');
 
           location = doc.data().d.coordinates;
@@ -79,7 +76,10 @@ class HomeBase extends Component {
   };
 
   setUsers = () => {
-    const snapshot = this.props.firebase.geoUsers().near({ center: this.state.location, radius: this.state.radius }).get();
+    const snapshot = this.props.firebase
+      .geoUsers()
+      .near({ center: this.state.location, radius: this.state.radius })
+      .get();
     snapshot.then(doc => {
       let data = [];
       doc.docs.forEach(item => {
@@ -89,14 +89,12 @@ class HomeBase extends Component {
     });
   };
 
-  onRadiusChange = (event) => {
+  onRadiusChange = event => {
     if (!event || !event.target) {
       return;
     }
-    this.setState({ radius: +event.target.value })
-    console.log(this.state.radius);
-
-  }
+    this.setState({ radius: +event.target.value });
+  };
 
   render() {
     const { user } = this.props;
@@ -104,14 +102,25 @@ class HomeBase extends Component {
     return (
       <React.Fragment>
         <h1>
-          hello {!!user && !!user.displayName ? user.displayName : "default"}
+          hello {!!user && !!user.displayName ? user.displayName : 'default'}
         </h1>
         {error && <p>{this.state.error}</p>}
         <label>
-          Radius {this.state.radius} (km)
-        <input type="range" name="range" step="1" defaultValue={radius} onChange={this.onRadiusChange} min="2" max="100" />
+          Radius {radius} (km)
+          <input
+            type="range"
+            name="range"
+            step="1"
+            defaultValue={radius}
+            onChange={this.onRadiusChange}
+            min="2"
+            max="100"
+          />
         </label>
-        {location && <DanceMap radius={radius} location={location} users={users} />};
+        {location && (
+          <DanceMap radius={radius} location={location} users={users} />
+        )}
+        ;
       </React.Fragment>
     );
   }
