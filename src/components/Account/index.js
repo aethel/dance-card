@@ -2,13 +2,13 @@ import React from 'react';
 import { PasswordForgetForm } from '../PasswordForget';
 import PasswordChangeForm from '../PasswordChange';
 import { withAuthorisation, AuthUserContext } from '../Session';
-import UserDetailstForm from './UserDetailsForm'
+import UserDetailstForm from './UserDetailsForm';
 const Account = () => (
   <AuthUserContext.Consumer>
     {authUser => (
       <div>
         account
-    <PasswordForgetForm />
+        <PasswordForgetForm />
         <PasswordChangeForm />
         <UserDetailstForm />
       </div>

@@ -42,43 +42,54 @@ class HomeBase extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.geolocation.location !== prevProps.geolocation.location) {
-      this.setState({
-        location: this.props.firebase.geoPoint(
-          this.props.geolocation.location.lat,
-          this.props.geolocation.location.lng
-        )
-      });
+      const location = this.props.firebase.geoPoint(
+        this.props.geolocation.location.lat,
+        this.props.geolocation.location.lng
+      );
+      this.setState({ location });
+      this.setUsers(location);
     }
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
     if (prevState.radius !== this.state.radius) {
-      this.setUsers();
+      this.setState({ users: [] });
+      this.setUsers(this.state.location);
     }
   }
 
   setUsersLocation = uid => {
-    const geoQuery = this.props.firebase.users().where('d.id', '==', uid);
-    console.log(uid, 'home');
-    geoQuery.get().then(
-      res => {
-        let location = null;
-        res.forEach(function(doc) {
-          console.log(doc.data(), 'home');
-
-          location = doc.data().d.coordinates;
-        });
-        this.setState({ location });
-        this.setUsers();
-      },
-      error => this.setState({ error })
-    );
+    // // const geoQuery = this.props.firebase.users().where('d.id', '==', uid);
+    // const geoQuery = this.props.firebase.users();
+    // console.log(uid, 'home');
+    // geoQuery.get().then(
+    //   res => {
+    //     let location = null;
+    //     // res.forEach(function(doc) {
+    //     //   console.log(doc.data(), 'home');
+    //     //   location = doc.data().d.coordinates;
+    //     // });
+    //     res.forEach(function(doc) {
+    //       console.log(doc.data().id === uid, doc.data().id, uid);
+    //       if (doc.data().id === uid) {
+    //         location = doc.data().d.coordinates;
+    //       }
+    //     });
+    //     this.setState({ location });
+    //     this.setUsers();
+    //   },
+    //   error => this.setState({ error })
+    // );
   };
 
-  setUsers = () => {
+  setUsers = location => {
+    // const { location } = this.state;
+    if (!location) {
+      return false;
+    }
     const snapshot = this.props.firebase
       .geoUsers()
-      .near({ center: this.state.location, radius: this.state.radius })
+      .near({ center: location, radius: this.state.radius })
       .get();
     snapshot.then(doc => {
       let data = [];
