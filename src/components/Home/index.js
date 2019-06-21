@@ -58,37 +58,13 @@ class HomeBase extends Component {
     }
   }
 
-  setUsersLocation = uid => {
-    // // const geoQuery = this.props.firebase.users().where('d.id', '==', uid);
-    // const geoQuery = this.props.firebase.users();
-    // console.log(uid, 'home');
-    // geoQuery.get().then(
-    //   res => {
-    //     let location = null;
-    //     // res.forEach(function(doc) {
-    //     //   console.log(doc.data(), 'home');
-    //     //   location = doc.data().d.coordinates;
-    //     // });
-    //     res.forEach(function(doc) {
-    //       console.log(doc.data().id === uid, doc.data().id, uid);
-    //       if (doc.data().id === uid) {
-    //         location = doc.data().d.coordinates;
-    //       }
-    //     });
-    //     this.setState({ location });
-    //     this.setUsers();
-    //   },
-    //   error => this.setState({ error })
-    // );
-  };
-
-  setUsers = location => {
-    // const { location } = this.state;
+    setUsers = location => {
     if (!location) {
       return false;
     }
     const snapshot = this.props.firebase
       .geoUsers()
+      .where('active', '==', true)
       .near({ center: location, radius: this.state.radius })
       .get();
     snapshot.then(doc => {
