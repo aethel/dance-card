@@ -36,8 +36,8 @@ class HomeBase extends Component {
   }
 
   async componentDidMount() {
-    const uid = sessionStorage.getItem('uid');
-    this.setUsersLocation(uid);
+    // const uid = sessionStorage.getItem('uid');
+    // this.setUsersLocation(uid);
   }
 
   componentDidUpdate(prevProps) {
@@ -59,6 +59,7 @@ class HomeBase extends Component {
   }
 
     setUsers = location => {
+    // const { location } = this.state;
     if (!location) {
       return false;
     }

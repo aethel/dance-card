@@ -50,7 +50,7 @@ class UserDetailstFormBase extends Component {
 
   componentDidMount() {
     const { user: { uid } } = this.props;
-    const geoQuery = this.props.firebase.geoUsers();
+    const geoQuery = this.props.firebase.geoUsers().where('id', '==', uid);
     geoQuery.get().then(
       res => {
         let username = null;
@@ -58,13 +58,11 @@ class UserDetailstFormBase extends Component {
         let dances = null;
         let isActive = null;
 
-        res.forEach(function (doc) {
-          if (doc.data().id === uid) {
+        res.docs.forEach(function (doc) {
             docID = doc.id;
             username = doc.data().username;
             isActive = doc.data().active;
             dances = doc.data().dances && objToStrMap(doc.data().dances);
-          }
         });
         if (username) {
           this.setState({ username })
@@ -133,11 +131,11 @@ class UserDetailstFormBase extends Component {
         <span>{danceName}</span>
         <label>
           Lead
-          <input type="checkbox" data-lead="lead" defaultChecked={dancePosition.lead} name={danceName} onChange={this.handleDanceObjectChange} />
+          <input type="checkbox" data-lead="lead" checked={dancePosition.lead} name={danceName} onChange={this.handleDanceObjectChange} />
         </label>
         <label>
           Follow
-          <input type="checkbox" data-follow="follow" defaultChecked={dancePosition.follow} name={danceName} onChange={this.handleDanceObjectChange} />
+          <input type="checkbox" data-follow="follow" checked={dancePosition.follow} name={danceName} onChange={this.handleDanceObjectChange} />
         </label>
       </li>)
     })
