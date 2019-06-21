@@ -110,6 +110,7 @@ class HomeBase extends Component {
   render() {
     const { user } = this.props;
     const { location, error, users, radius } = this.state;
+    
     return (
       <React.Fragment>
         <h1>

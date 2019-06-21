@@ -28,7 +28,6 @@ const withGeolocation = Component => {
             },
             geoPoint
           });
-          console.log(this.state);
         });
       } else {
         this.setState({ error: 'Geolocation unavailable' });

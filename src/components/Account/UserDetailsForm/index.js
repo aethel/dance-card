@@ -48,14 +48,11 @@ class UserDetailstFormBase extends Component {
     this.state = { ...INITIAL_STATE };
   }
 
-
   componentDidMount() {
     const { user: { uid } } = this.props;
     const geoQuery = this.props.firebase.geoUsers();
     geoQuery.get().then(
-
       res => {
-
         let username = null;
         let docID = null;
         let dances = null;
@@ -119,7 +116,6 @@ class UserDetailstFormBase extends Component {
     }
 
     this.setState({ dances: tempDance })
-    console.log(this.state);
   }
 
 
