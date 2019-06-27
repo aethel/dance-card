@@ -21,6 +21,4 @@ DANCES.sort((a, b) => a > b).forEach(dance => {
   dances.set(dance, defaultDanceState);
 });
 
-console.log(dances);
-
 export default dances;

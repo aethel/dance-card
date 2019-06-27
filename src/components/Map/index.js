@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Map, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-
 import L from 'leaflet';
+import { UserDetailsPopup } from './UserDetailsPopup';
+
 
 delete L.Icon.Default.prototype._getIconUrl;
 
@@ -41,17 +42,20 @@ export default class DanceMap extends Component {
     const centre = location
       ? Object.values(location)
       : [this.state.lat, this.state.lng];
-    const userItem = users
+    
+      const userItem = users
       .filter(user => user.coordinates)
       .map(user => ({ ...user, coordinates: Object.values(user.coordinates) }))
-      .map((user, index) => (
-        <PopupMarker
+      .map((user, index) => (        
+        <Marker
           key={`${user.username}${index}`}
           position={user.coordinates}
+          className={'blahhhh'}
         >
-          {user.username}, {user.email}
-        </PopupMarker>
+          <UserDetailsPopup user={user} />          
+        </Marker>
       ));
+
     return (
       <React.Fragment>
         <button onClick={this.recentreMap}>Recentre</button>
@@ -65,7 +69,7 @@ export default class DanceMap extends Component {
             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
           />
-          <PopupMarker position={centre}>Is a label</PopupMarker>
+          <PopupMarker position={centre}>It's you</PopupMarker>
           <Circle
             center={{ lat: centre[0], lng: centre[1] }}
             fillColor="blue"
