@@ -50,22 +50,25 @@ class UserDetailstFormBase extends Component {
 
   componentDidMount() {
     const { user: { uid } } = this.props;
+    const { username, active, dances } = this.state;
+    console.log(this.state);
+
     const geoQuery = this.props.firebase.geoUsers().where('id', '==', uid);
     geoQuery.get().then(
       res => {
-        let username = null;
+        let usernameQuery = username;
         let docID = null;
-        let dances = null;
-        let isActive = null;
+        let dancesQuery = dances;
+        let isActive = active;
 
         res.docs.forEach(function (doc) {
-            docID = doc.id;
-            username = doc.data().username;
-            isActive = doc.data().active;
-            dances = doc.data().dances && objToStrMap(doc.data().dances);
+          docID = doc.id;
+          usernameQuery = doc.data().username;
+          isActive = doc.data().active;
+          dancesQuery = doc.data().dances && objToStrMap(doc.data().dances);
         });
-        if (username) {
-          this.setState({ username })
+        if (usernameQuery) {
+          this.setState({ username: usernameQuery })
         }
         if (docID) {
           this.setState({ docID })
@@ -73,8 +76,8 @@ class UserDetailstFormBase extends Component {
         if (isActive !== undefined || isActive !== null) {
           this.setState({ active: isActive })
         }
-        if (dances) {
-          this.setState({ dances: new Map([...dances]) })
+        if (dancesQuery) {
+          this.setState({ dances: new Map([...dancesQuery]) })
         }
       },
       error => this.setState({ error })
@@ -141,6 +144,9 @@ class UserDetailstFormBase extends Component {
     })
     return (
       <form onSubmit={this.onSubmit}>
+        {username}
+        checked {!!active}
+        checked{active}
         <fieldset>
           <legend>Personal info</legend>
           <label>
@@ -149,7 +155,7 @@ class UserDetailstFormBase extends Component {
           </label>
           <label>
             Active
-          <input type="checkbox" name="active" checked={active} onChange={this.handleActiveCheckbox} />
+          <input type="checkbox" name="active" checked={!!active} onChange={this.handleActiveCheckbox} />
           </label>
         </fieldset>
         <fieldset>
