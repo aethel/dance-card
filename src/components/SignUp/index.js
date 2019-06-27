@@ -20,7 +20,8 @@ const INITIAL_STATE = {
   username: "",
   email: "",
   password: "",
-  error: null
+  error: null,
+  active: true
 };
 
 class SignUpFormBase extends Component {
@@ -33,18 +34,43 @@ class SignUpFormBase extends Component {
   //   this.getGeolocation();
   // }
 
+  componentDidMount() {
+    this.showGeolocationDenialError();
+    console.log(this.props, 'mount');
+  }
+  
+  componentDidUpdate(prevProps) {
+    if (this.props.geoLocation.location !== prevProps.geoLocation.location && this.props.geoLocation.location){
+      this.showGeolocationDenialError(false);
+    }    
+  }
+
+  showGeolocationDenialError = (showError = true) => {
+    if(showError) {
+      this.setState({ error: 'Please allow the use of geolocation. It is crucial to proper functioning of the app. If you denied it before, it may have to be renabled in your browser\'s settings.' })
+    } else {
+      this.setState({ error: null })
+    }
+  }
+
   onSubmit = event => {
-    const { email, password, username } = this.state;
-    const { geoLocation } = this.props;
-    // geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
+    const { email, password, username, active } = this.state;
+    const { geoLocation:{geoPoint} } = this.props;
+
+    if(!geoPoint) {
+      this.setState({error: 'Geolocation has not been allowed'});
+      return false;
+    }
+
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
       .then(authUser => {
         const doc = {
           username,
           email,
-          coordinates: geoLocation.geoPoint,
-          id: authUser.user.uid
+          coordinates: geoPoint,
+          id: authUser.user.uid,
+          active
         };
         return this.props.firebase
           .geoUsers()
@@ -72,6 +98,7 @@ class SignUpFormBase extends Component {
     const isInvalid = password === "" || email === "" || username === "";
     return (
       <div>
+        {error && <p>{error}</p>}
         <form>
           <input
             type="text"
