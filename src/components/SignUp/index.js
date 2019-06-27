@@ -55,7 +55,12 @@ class SignUpFormBase extends Component {
 
   onSubmit = event => {
     const { email, password, username, active } = this.state;
-    const { geoLocation } = this.props;
+    const { geoLocation:{geoPoint} } = this.props;
+
+    if(!geoPoint) {
+      this.setState({error: 'Geolocation has not been allowed'});
+      return false;
+    }
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, password)
@@ -63,7 +68,7 @@ class SignUpFormBase extends Component {
         const doc = {
           username,
           email,
-          coordinates: geoLocation.geoPoint,
+          coordinates: geoPoint,
           id: authUser.user.uid,
           active
         };
