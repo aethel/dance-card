@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "@reach/router";
 import { compose } from "recompose";
 import * as ROUTES from "../../constants/routes";
 import { withFirebase } from "../Firebase";
@@ -138,7 +138,7 @@ const SignUpLink = () => (
 );
 
 const SignUpForm = compose(
-  withRouter,
+  // withRouter,
   withFirebase
 )(SignUpFormBase);
 

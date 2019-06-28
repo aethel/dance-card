@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 import { Popup } from 'react-leaflet';
-import { Link } from 'react-router-dom';
 import * as styles from './styles.css';
+import { Link } from '@reach/router';
 import * as ROUTES from "../../../constants/routes";
 
 const objToStrMap = (obj) => {
@@ -33,10 +33,11 @@ export const UserDetailsPopup = memo((props) => {
                     {danceListItems}
                 </ul>
             {/* <Link to={ROUTES.CHAT, toID:id}}>Message User Link</Link> */}
-            <Link to={{ pathname: `${ROUTES.CHAT}`, query: { toID: id, fromID: fromID }, hash: `${id}/${fromID}` }} as={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link>
+            {/* <Link to={{ pathname: `${ROUTES.CHAT}`, query: { toID: id, fromID: fromID }, hash: `${id}/${fromID}` }} as={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link> */}
             {/* <Link href={{ pathname: '/uebersicht/finanzierungszertifikat', query: CertificateStep.ManualUpload }}
                 as={`/uebersicht/finanzierungszertifikat/${CertificateStep.ManualUpload}`}> */}
-            {/* <Link to={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link> */}
+            {`${ROUTES.CHAT}/${id}/${fromID}`}
+            <Link to={`/chat/${id}/${fromID}`}>Message User Link</Link>
             </div>            
         </Popup>
     });

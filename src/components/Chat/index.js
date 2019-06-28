@@ -1,8 +1,7 @@
 import React, { memo } from 'react'
 
 export const ChatPage = memo(props => {
-    const fromID = sessionStorage.getItem('uid');
-    console.log(props.location.toID, fromID);
+    // const fromID = sessionStorage.getItem('uid');
     console.log(props);
     
     return (

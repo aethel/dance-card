@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import AuthUserContext from './context';
@@ -33,7 +33,7 @@ const withAuthorization = condition => Component => {
   }
 
   return compose(
-    withRouter,
+    // withRouter,
     withFirebase,
   )(WithAuthorization);
 };
