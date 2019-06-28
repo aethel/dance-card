@@ -14,6 +14,7 @@ const objToStrMap = (obj) => {
 
 export const UserDetailsPopup = memo((props) => {
     const { username, dances,active, id } = props.user;   
+    const fromID = sessionStorage.getItem('uid');
     const danceListItems = dances && Array.from(objToStrMap(dances)).map((dance, index) => {
         const danceName = dance[0];
         const dancePosition = dance[1];
@@ -31,7 +32,11 @@ export const UserDetailsPopup = memo((props) => {
                 <ul>
                     {danceListItems}
                 </ul>
-            <Link to={{pathname:ROUTES.CHAT, toID:id}}>Message User Link</Link>
+            {/* <Link to={ROUTES.CHAT, toID:id}}>Message User Link</Link> */}
+            <Link to={{ pathname: `${ROUTES.CHAT}`, query: { toID: id, fromID: fromID }, hash: `${id}/${fromID}` }} as={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link>
+            {/* <Link href={{ pathname: '/uebersicht/finanzierungszertifikat', query: CertificateStep.ManualUpload }}
+                as={`/uebersicht/finanzierungszertifikat/${CertificateStep.ManualUpload}`}> */}
+            {/* <Link to={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link> */}
             </div>            
         </Popup>
     });
