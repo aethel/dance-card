@@ -14,7 +14,8 @@ import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import { ChatPage } from '../Chat';
 
-const App =()=> (
+const App = () => {  
+ return (
         <Router>
           <div>
             <Navigation />
@@ -35,6 +36,6 @@ const App =()=> (
             <Route exact path={ROUTES.CHAT} component={ChatPage} />
           </div>
         </Router>
-)
+)}
 
 export default withAuthentication(App);
