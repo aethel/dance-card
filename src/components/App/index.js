@@ -10,10 +10,10 @@ import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
+import ChatPage  from '../Chat';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
-import { ChatPage } from '../Chat';
 
 const App = () => {  
  return (
@@ -42,7 +42,7 @@ const App = () => {
        <HomePage path={ROUTES.HOME}/>
        <AccountPage path={ROUTES.ACCOUNT}/>
        <AdminPage path={ROUTES.ADMIN}/>
-       <ChatPage path='chat/:to/:from'/>
+       <ChatPage path='chat/:toID/:fromID'/>
         </Router>
           </div>
 )}

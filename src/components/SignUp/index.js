@@ -48,7 +48,7 @@ class SignUpFormBase extends Component {
   showGeolocationDenialError = (showError = true) => {
     if(showError) {
       this.setState({ error: 'Please allow the use of geolocation. It is crucial to proper functioning of the app. If you denied it before, it may have to be renabled in your browser\'s settings.' })
-    } else {
+    } else { 
       this.setState({ error: null })
     }
   }

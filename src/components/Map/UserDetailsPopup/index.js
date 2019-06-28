@@ -37,7 +37,7 @@ export const UserDetailsPopup = memo((props) => {
             {/* <Link href={{ pathname: '/uebersicht/finanzierungszertifikat', query: CertificateStep.ManualUpload }}
                 as={`/uebersicht/finanzierungszertifikat/${CertificateStep.ManualUpload}`}> */}
             {`${ROUTES.CHAT}/${id}/${fromID}`}
-            <Link to={`/chat/${id}/${fromID}`}>Message User Link</Link>
+            <Link to={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link>
             </div>            
         </Popup>
     });
