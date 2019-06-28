@@ -1,6 +1,8 @@
 import React, { memo } from 'react'
 import { Popup } from 'react-leaflet';
+import { Link } from 'react-router-dom';
 import * as styles from './styles.css';
+import * as ROUTES from "../../../constants/routes";
 
 const objToStrMap = (obj) => {
     let strMap = new Map();
@@ -29,6 +31,9 @@ export const UserDetailsPopup = memo((props) => {
                 <ul>
                     {danceListItems}
                 </ul>
+                {/* // const uid = sessionStorage.getItem('uid'); */}
+            <Link to={ROUTES.CHAT}>Message User Link</Link>
+            <a href={ROUTES.CHAT}>Message User</a>
             </div>
         </Popup>
     });

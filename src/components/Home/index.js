@@ -9,6 +9,7 @@ import {
 import DanceMap from '../Map';
 import withGeolocation from '../Geolocation';
 import GeolocationContext from '../Geolocation/context';
+import { log } from 'util';
 
 const HomePage = () => (
   <section>
@@ -36,7 +37,9 @@ class HomeBase extends Component {
   }
 
   async componentDidMount() {
-    // const uid = sessionStorage.getItem('uid');
+    const uid = sessionStorage.getItem('uid');
+    console.log(uid);
+    
     // this.setUsersLocation(uid);
   }
 

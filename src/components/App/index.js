@@ -12,6 +12,7 @@ import AdminPage from '../Admin';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
+import { ChatPage } from '../Chat';
 
 const App =()=> (
         <Router>
@@ -31,6 +32,7 @@ const App =()=> (
             <Route exact path={ROUTES.HOME} component={HomePage} />
             <Route exact path={ROUTES.ACCOUNT} component={AccountPage} />
             <Route exact path={ROUTES.ADMIN} component={AdminPage} />
+            <Route exact path={ROUTES.CHAT} component={ChatPage} />
           </div>
         </Router>
 )

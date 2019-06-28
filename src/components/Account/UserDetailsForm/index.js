@@ -144,9 +144,6 @@ class UserDetailstFormBase extends Component {
     })
     return (
       <form onSubmit={this.onSubmit}>
-        {username}
-        checked {!!active}
-        checked{active}
         <fieldset>
           <legend>Personal info</legend>
           <label>
