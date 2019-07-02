@@ -98,7 +98,7 @@ class SignUpFormBase extends Component {
     const isInvalid = password === "" || email === "" || username === "";
     return (
       <div>
-        {error && <p>{error}</p>}
+        {/* {error && <p>{error}</p>} */}
         <form>
           <input
             type="text"

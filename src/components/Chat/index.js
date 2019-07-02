@@ -18,8 +18,26 @@ class ChatBase extends PureComponent {
         const { firebase, fromID, toID } = this.props;
         const { message } = this.state;
         event.preventDefault();
+    //     var studentsClassroomRef =
+    //         db.collection('student_class').doc(classroomId)
+    //             .collection('students');
+
+    //     studentsClassroomRef
+    //         .doc(studentUserId)
+    //         .set({})
+    //         .then(function () {
+    //             console.log('Document Added ');
+    //         })
+    //         .catch(function (error) {
+    //             console.error('Error adding document: ', error);
+    //         });
+    // }
+
+
         console.log(firebase, fromID, toID, message);
-        this.props.firebase.chats().doc(`${fromID}${toID}`).collection(`${fromID}`).add().set({t:'ttt5',w:'ffff5'}, {merge: true}).then(docRef =>{
+        const chatroomRef = this.props.firebase.chats().doc(`${fromID}${toID}`).collection(`messages`);
+        chatroomRef.doc().set({t:'ttt6',w:'ffff6'}).then(docRef =>{
+        // this.props.firebase.chats().doc(`${fromID}${toID}`).collection(`messages`).add().set({t:'ttt5',w:'ffff5'}, {merge: true}).then(docRef =>{
             console.log(docRef);
             // use chat(id) to set new Obj
         })
