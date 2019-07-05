@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 import { compose } from "recompose";
 import * as ROUTES from "../../constants/routes";
 import { withFirebase } from "../Firebase";
@@ -82,7 +82,8 @@ class SignUpFormBase extends Component {
       })
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        // this.props.history.push(ROUTES.HOME);
+        navigate(ROUTES.HOME)
       })
       .catch(error => {
         this.setState({ error });
