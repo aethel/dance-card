@@ -1,5 +1,6 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import { withFirebase } from '../Firebase';
+import MessagesList from './MessagesList';
 
 const INITIAL_STATE = {
     message: '',
@@ -38,16 +39,14 @@ class ChatBase extends PureComponent {
     render() {
         const { message } = this.state;
         return (
-            <form onSubmit={this.onSubmit}>
-                <ul>
-                    <li>message 1</li>
-                    <li>message 21</li>
-                    <li>message 3</li>
-                    <li>message 4</li>
-                </ul>
+            <Fragment>
+            
+            <MessagesList/>
+            <form onSubmit={this.onSubmit}>                
                 <input name="message" type="text" defaultValue={message} placeholder="Your message" onChange={this.onChange} />
                 <button type="submit">Send</button>
             </form>
+            </Fragment>
         )
 
     }
