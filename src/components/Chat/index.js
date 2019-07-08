@@ -38,10 +38,11 @@ class ChatBase extends PureComponent {
 
     render() {
         const { message } = this.state;
+        const { fromID, toID } = this.props;
         return (
             <Fragment>
             
-            <MessagesList/>
+            <MessagesList fromID={fromID} toID={toID} />
             <form onSubmit={this.onSubmit}>                
                 <input name="message" type="text" defaultValue={message} placeholder="Your message" onChange={this.onChange} />
                 <button type="submit">Send</button>

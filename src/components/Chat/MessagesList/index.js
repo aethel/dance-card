@@ -3,20 +3,17 @@ import { withFirebase } from '../../Firebase';
 
 const MessageListBase = (props) => {
     const [messages, appendMessage] = useState([]);
-
+    const {toID, fromID} = props;
+    console.log(props);
+    
     useEffect(() => {
         const chats = async () => {
-            const snapshot = await props.firebase.chats().get();
-            console.log(snapshot.docs.map(doc => doc.data()));
-            snapshot.docs.forEach(item => {
-                console.log(item.data());
-                
-            })
+            const snapshot = await props.firebase.chats().doc(`${props.fromID}${props.toID}`).collection('messages').get();
             return snapshot.docs.map(doc => doc.data());
         }
         chats();
 
-    }, []);
+    }, [fromID, toID]);
 
     return (
         <ul>
