@@ -29,7 +29,7 @@ const MessageListBase = (props) => {
     return (
         <ul>
             {messages.map((item, index) => (
-                <li key={`${item.message}${index}`}>{item.message} {item.timestamp} {new Date(item.timestamp).toLocaleDateString('en-GB',{ month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</li>
+                <li key={`${item.message}${index}`}>{item.message} {new Date(item.timestamp).toLocaleDateString('en-GB',{ month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'})}</li>
             ))}
         </ul>
     )
