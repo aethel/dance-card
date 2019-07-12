@@ -39,7 +39,7 @@ class HomeBase extends Component {
   async componentDidMount() {
     const uid = sessionStorage.getItem('uid');
     console.log(uid);
-    
+//if user denies geolocation, load latest saved position? otherwise, if new position differs from stored, update stored    
     // this.setUsersLocation(uid);
   }
 
