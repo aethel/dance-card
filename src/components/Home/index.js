@@ -9,7 +9,6 @@ import {
 import DanceMap from '../Map';
 import withGeolocation from '../Geolocation';
 import GeolocationContext from '../Geolocation/context';
-import { log } from 'util';
 
 const HomePage = () => (
   <section>

@@ -21,7 +21,8 @@ const INITIAL_STATE = {
   email: "",
   password: "",
   error: null,
-  active: true
+  active: true,
+  chats: []
 };
 
 class SignUpFormBase extends Component {
@@ -54,7 +55,7 @@ class SignUpFormBase extends Component {
   }
 
   onSubmit = event => {
-    const { email, password, username, active } = this.state;
+    const { email, password, username, active,chats } = this.state;
     const { geoLocation:{geoPoint} } = this.props;
 
     if(!geoPoint) {
@@ -70,7 +71,8 @@ class SignUpFormBase extends Component {
           email,
           coordinates: geoPoint,
           id: authUser.user.uid,
-          active
+          active,
+          chats
         };
         return this.props.firebase
           .geoUsers()
