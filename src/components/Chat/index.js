@@ -46,23 +46,36 @@ class ChatBase extends PureComponent {
     };
 
     findDocID = ({ docs }) => docs[0].id;
-    
+
+    userChatsObjUpdate = async (userID) => {
+        const { fromID, toID } = this.props;
+        const userIDobject = await this.props.firebase.geoUsers().where('id', '==', userID).get();
+        const userIDdocID = this.findDocID(userIDobject);
+        const userIDref = this.props.firebase.geoUsers().doc(userIDdocID);
+        const userChats = userIDref.docs[0].data().chats;
+        userChats.push(`${fromID}${toID}`);
+        userIDref.set({ chats: userChats }, { merge: true })
+    }
+
     addChatIdToUsers = async () => {
         const { fromID, toID } = this.props;
-        const fromIDobject = await this.props.firebase.geoUsers().where('id', '==', fromID).get();
-        const fromIDdocID = this.findDocID(fromIDobject);
-        const fromIDref = this.props.firebase.geoUsers().doc(fromIDdocID);
-        const chatsFrom = fromIDobject.docs[0].data().chats;
-        
-        const toIDobject = await this.props.firebase.geoUsers().where('id', '==', toID).get();
-        const toIDdocID = this.findDocID(toIDobject);
-        const toIDref = this.props.firebase.geoUsers().doc(toIDdocID);
-        const chatsTo = toIDobject.docs[0].data().chats;
-        chatsFrom.push(`${fromID}${toID}`);
-        chatsTo.push(`${fromID}${toID}`);
-        fromIDref.set({chats: chatsFrom},{merge:true})
-        toIDref.set({chats:chatsTo},{merge:true})
-        
+        this.userChatsObjUpdate(fromID);
+        this.userChatsObjUpdate(toID);
+
+        // const fromIDobject = await this.props.firebase.geoUsers().where('id', '==', fromID).get();
+        // const fromIDdocID = this.findDocID(fromIDobject);
+        // const fromIDref = this.props.firebase.geoUsers().doc(fromIDdocID);
+        // const chatsFrom = fromIDobject.docs[0].data().chats;
+
+        // const toIDobject = await this.props.firebase.geoUsers().where('id', '==', toID).get();
+        // const toIDdocID = this.findDocID(toIDobject);
+        // const toIDref = this.props.firebase.geoUsers().doc(toIDdocID);
+        // const chatsTo = toIDobject.docs[0].data().chats;
+        // chatsFrom.push(`${fromID}${toID}`);
+        // chatsTo.push(`${fromID}${toID}`);
+        // fromIDref.set({chats: chatsFrom},{merge:true})
+        // toIDref.set({chats:chatsTo},{merge:true})
+
     }
 
     render() {
