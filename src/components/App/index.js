@@ -14,11 +14,15 @@ import ChatPage  from '../Chat';
 
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
+import MessageNotification from '../MessageNotification';
 
 const App = () => {  
+  
+
  return (
    <div>
             <Navigation />
+            <MessageNotification/>
             <hr />
           <Router>
 

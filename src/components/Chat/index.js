@@ -16,12 +16,25 @@ class ChatBase extends PureComponent {
     }
 
     componentDidMount() {
-        // this.props.firebase.chats().get().then(
-        //     res => {
-        //         // console.log(res.docs[0].id);
-        //         // console.log(res.docs[0].doc);
-        //     }
-        // )
+        // db.collection("cities").where("state", "==", "CA")
+        //     .onSnapshot(function (querySnapshot) {
+        //         var cities = [];
+        //         querySnapshot.forEach(function (doc) {
+        //             cities.push(doc.data().name);
+        //         });
+        //         console.log("Current cities in CA: ", cities.join(", "));
+        //     });
+        const { fromID, toID } = this.props;
+        this.props.firebase.chats().doc(`${fromID}${toID}`).collection('messages').onSnapshot(querySnapshot => {
+            console.log(querySnapshot);
+            console.log(querySnapshot.id);
+            
+            querySnapshot.forEach(doc => {
+                console.log(doc.data());
+                
+            })
+        })
+        this.props.firebase.chats().get().then(res => {console.log(res)});
     }
 
     onSubmit = (event) => {
