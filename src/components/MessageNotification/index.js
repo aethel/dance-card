@@ -18,24 +18,24 @@ const MessageNotificationBase = (props) => {
     const [chatIDs, setChatIDs] = useState(null);
     const uid = sessionStorage.getItem('uid');
     const geoQuery = props.firebase.geoUsers().where('id', '==', uid);
-    geoQuery.get().then(res => {
-        res.docs.forEach(doc => {
-            console.log(doc);
-            console.log(doc.data().chats);
-            setChatIDs(doc.data().chats)
-        })
-    });
+    // geoQuery.get().then(res => {
+    //     res.docs.forEach(doc => {
+    //         console.log(doc);
+    //         console.log(doc.data().chats);
+    //         setChatIDs(doc.data().chats)
+    //     })
+    // });
 
-if(chatIDs){
-    chatIDs.forEach(chat => {
-        props.firebase.chats().where('id','==',chat).onSnapshot( snapshot => {
-            snapshot.forEach( item => {
-                console.log(item);
+// if(chatIDs){
+//     chatIDs.forEach(chat => {
+//         props.firebase.chats().where('id','==',chat).onSnapshot( snapshot => {
+//             snapshot.forEach( item => {
+//                 console.log(item);
                 
-            })      
-        })
-    })
-}
+//             })      
+//         })
+//     })
+// }
     // const chats = async () => {
     //     const snapshot = await props.firebase.chats().get();
     //     const mappedMessages = snapshot.docs.map(doc => {

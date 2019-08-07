@@ -24,17 +24,22 @@ class ChatBase extends PureComponent {
         //         });
         //         console.log("Current cities in CA: ", cities.join(", "));
         //     });
-        const { fromID, toID } = this.props;
-        this.props.firebase.chats().doc(`${fromID}${toID}`).collection('messages').onSnapshot(querySnapshot => {
-            console.log(querySnapshot);
-            console.log(querySnapshot.id);
+        // const { fromID, toID } = this.props;
+        // const uid = sessionStorage.getItem('uid');
+        // console.log(uid);
+        
+        // this.props.firebase.chats().where('fromID', '==', uid).onSnapshot(querySnapshot => {
+        //     console.log(querySnapshot);
+        //     console.log(querySnapshot.id);
             
-            querySnapshot.forEach(doc => {
-                console.log(doc.data());
+        //     querySnapshot.forEach(doc => {
+        //         console.log(doc.data());
                 
-            })
-        })
-        this.props.firebase.chats().get().then(res => {console.log(res)});
+        //     })
+        // })
+        // this.props.firebase.chats().get().then(res => {
+        //     res.docs.forEach(item => console.log(item));
+        // });
     }
 
     onSubmit = (event) => {
@@ -43,8 +48,8 @@ class ChatBase extends PureComponent {
         event.preventDefault();
         this.addChatIdToUsers();
         console.log(fromID, toID, message);
-        const chatroomRef = this.props.firebase.chats().doc(`${fromID}${toID}`).collection(`messages`);
-        chatroomRef.doc().set({ message, fromID, toID, timestamp }).then(docRef => {
+        const chatsRef = this.props.firebase.chats();
+        chatsRef.doc().set({ message, fromID, toID, timestamp, chatID: `${fromID}${toID}`}).then(docRef => {
             console.log(docRef);
             // use chat(id) to set new Obj
         })
@@ -65,9 +70,11 @@ class ChatBase extends PureComponent {
         const userIDobject = await this.props.firebase.geoUsers().where('id', '==', userID).get();
         const userIDdocID = this.findDocID(userIDobject);
         const userIDref = this.props.firebase.geoUsers().doc(userIDdocID);
-        const userChats = userIDref.docs[0].data().chats;
-        userChats.push(`${fromID}${toID}`);
-        userIDref.set({ chats: userChats }, { merge: true })
+        if (userIDref && userIDref.hasOwnProperty('docs')){
+            const userChats = userIDref.docs[0].data().chats;
+            userChats.push(`${fromID}${toID}`);
+            userIDref.set({ chats: userChats }, { merge: true })
+        }
     }
 
     addChatIdToUsers = async () => {
