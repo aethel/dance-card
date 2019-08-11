@@ -41,7 +41,7 @@ class MessageListBase extends React.PureComponent {
         
         return (
             <ul>
-                {messages.map((item, index) => (
+                {messages.sort((item1, item2) => item1.timestamp > item2.timestamp ).map((item, index) => (
                     <li key={`${item.message}${index}`}> 
                         <time>{new Date(item.timestamp).toLocaleDateString('en-GB', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</time>
                         <p>{item.message}</p>
