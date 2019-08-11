@@ -1,64 +1,53 @@
 import React, { useState, useEffect } from 'react'
 import { withFirebase } from '../../Firebase';
-import {map, flatMap} from 'rxjs/operators';
-import {combineLatest} from 'rxjs';
-import {collection} from 'rxfire/firestore';
+import { map, flatMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { collection } from 'rxfire/firestore';
 
-const MessageListBase = (props) => {
-    const [messages, setMessages] = useState([]);
-    const { toID, fromID } = props;
-    const uid = sessionStorage.getItem('uid');
-    // console.log(props);
+const uid = sessionStorage.getItem('uid');
 
-    useEffect(() => {
-    //     return props.firebase.chats().where('toID', '==', uid).where('fromID', '==', uid).onSnapshot(querySnapshot => {
-    //   setMessages(querySnapshot.docs.map(message=> message.data()));
-    //     })
-        combineMessages();
-    }, []);
+class MessageListBase extends React.PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            messages: []
+        }
+    }
 
-
-    const combineMessages = async () => {
-        const fromRef = props.firebase.chats().where('fromID', '==', uid);
-        const toRef = props.firebase.chats().where('toID', '==', uid);
+    componentDidMount() {
+        const fromRef = this.props.firebase.chats().where('fromID', '==', uid);
+        const toRef = this.props.firebase.chats().where('toID', '==', uid);
         const fromRef$ = collection(fromRef);
         const toRef$ = collection(toRef);
 
-        const messages$ = combineLatest(fromRef$,toRef$).pipe(
+        const messages$ = combineLatest(fromRef$, toRef$).pipe(
             flatMap(msgs => {
                 const [incoming, sent] = msgs;
-                console.log(messages);
-                return [...incoming,...sent]
+                return [...incoming, ...sent]
             }),
             map(docs => docs.data())
         )
-
-    //     messages$.subscribe(item => 
-    //         {debugger
-    //         console.log(item.data())})
-    //     console.log(messages);
-        
-    // }
-
-
-        // collection(db.collection('users'))
-        //     .pipe(map(docs => docs.map(d => d.data())))
-        //     .subscribe(users => { console.log(users) });
-
-        messages$.subscribe(item => {
-            setMessages([...messages,item]);
-            console.log(messages);
-            console.log(item);
+        messages$.subscribe((item,index) => {
+            const messages = [...this.state.messages, item];
+            this.setState({messages})
         })
-        
-        
-        }
-    return (
-        
-        <ul>
-            
+    }
+
+
+
+    render() {
+        const { toID, fromID } = this.props;
+        const { messages } = this.state;
+        return (
+
+            <ul>
+                {messages.map((item, index) => (
+                    <li key={`${item.message}${index}`}>{item.message} {new Date(item.timestamp).toLocaleDateString('en-GB', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</li>
+                ))}
         </ul>
-    )
+        )
+    }
+
 }
 
 // on init check if user id is in some collections
