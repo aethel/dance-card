@@ -18,12 +18,9 @@ class ChatBase extends PureComponent {
 
     onSubmit = (event) => {
         const { fromID, toID, fromUser } = this.props;
-        console.log(fromUser);
-        
         const { message, timestamp } = this.state;
         event.preventDefault();
         this.addChatIdToUsers();
-        console.log(fromID, toID, message);
         const chatsRef = this.props.firebase.chats();
         chatsRef.doc().set({ message, fromID, toID, timestamp, fromUser, chatID: `${fromID}${toID}`}).then(docRef => {
             console.log(docRef);
@@ -71,7 +68,6 @@ class ChatBase extends PureComponent {
                 </form>
             </Fragment>
         )
-
     }
 }
 
