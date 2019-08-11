@@ -27,11 +27,13 @@ class Firebase {
   doSignOut = () => this.auth.signOut();
   doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
   doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
-  users = () => this.db.collection("users");
-  user = uid => this.db.doc(`users/${uid}`);
+  // users = () => this.db.collection("users");
+  // user = uid => this.db.doc(`users/${uid}`);
   geoUsers = () => this.geofirestore.collection("users");
   geoPoint = (latitude, longitude) =>
-    new this.firestoreRef.GeoPoint(latitude, longitude);
+  new this.firestoreRef.GeoPoint(latitude, longitude);
+  chats = () => this.db.collection("chats");
+  chat = (cid) => this.db.doc(`users/${cid}`);
 }
 
 export default Firebase;

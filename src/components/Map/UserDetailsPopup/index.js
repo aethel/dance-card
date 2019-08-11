@@ -1,6 +1,8 @@
 import React, { memo } from 'react'
 import { Popup } from 'react-leaflet';
 import * as styles from './styles.css';
+import { Link } from '@reach/router';
+import * as ROUTES from "../../../constants/routes";
 
 const objToStrMap = (obj) => {
     let strMap = new Map();
@@ -11,7 +13,8 @@ const objToStrMap = (obj) => {
 }
 
 export const UserDetailsPopup = memo((props) => {
-    const { username, dances,active } = props.user;
+    const { username, dances,active, id } = props.user;   
+    const fromID = sessionStorage.getItem('uid');
     const danceListItems = dances && Array.from(objToStrMap(dances)).map((dance, index) => {
         const danceName = dance[0];
         const dancePosition = dance[1];
@@ -29,6 +32,8 @@ export const UserDetailsPopup = memo((props) => {
                 <ul>
                     {danceListItems}
                 </ul>
-            </div>
+            {`${ROUTES.CHAT}/${id}/${fromID}/${username}`}
+            <Link to={`${ROUTES.CHAT}/${id}/${fromID}/${username}`}>Message User Link</Link>
+            </div>            
         </Popup>
     });

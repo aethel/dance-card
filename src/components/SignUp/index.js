@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Link, navigate } from "@reach/router";
 import { compose } from "recompose";
 import * as ROUTES from "../../constants/routes";
 import { withFirebase } from "../Firebase";
@@ -21,7 +21,8 @@ const INITIAL_STATE = {
   email: "",
   password: "",
   error: null,
-  active: true
+  active: true,
+  chats: []
 };
 
 class SignUpFormBase extends Component {
@@ -48,13 +49,13 @@ class SignUpFormBase extends Component {
   showGeolocationDenialError = (showError = true) => {
     if(showError) {
       this.setState({ error: 'Please allow the use of geolocation. It is crucial to proper functioning of the app. If you denied it before, it may have to be renabled in your browser\'s settings.' })
-    } else {
+    } else { 
       this.setState({ error: null })
     }
   }
 
   onSubmit = event => {
-    const { email, password, username, active } = this.state;
+    const { email, password, username, active,chats } = this.state;
     const { geoLocation:{geoPoint} } = this.props;
 
     if(!geoPoint) {
@@ -70,7 +71,8 @@ class SignUpFormBase extends Component {
           email,
           coordinates: geoPoint,
           id: authUser.user.uid,
-          active
+          active,
+          chats
         };
         return this.props.firebase
           .geoUsers()
@@ -82,7 +84,8 @@ class SignUpFormBase extends Component {
       })
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        // this.props.history.push(ROUTES.HOME);
+        navigate(ROUTES.HOME)
       })
       .catch(error => {
         this.setState({ error });
@@ -98,7 +101,7 @@ class SignUpFormBase extends Component {
     const isInvalid = password === "" || email === "" || username === "";
     return (
       <div>
-        {error && <p>{error}</p>}
+        {/* {error && <p>{error}</p>} */}
         <form>
           <input
             type="text"
@@ -138,7 +141,7 @@ const SignUpLink = () => (
 );
 
 const SignUpForm = compose(
-  withRouter,
+  // withRouter,
   withFirebase
 )(SignUpFormBase);
 

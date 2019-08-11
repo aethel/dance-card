@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
+import { navigate } from "@reach/router";
 import { SignUpLink } from '../SignUp';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
@@ -36,7 +36,8 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        navigate(ROUTES.HOME);
+        // this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         this.setState({ error });
@@ -81,7 +82,7 @@ class SignInFormBase extends Component {
 }
 
 const SignInForm = compose(
-  withRouter,
+  // withRouter,
   withFirebase
 )(SignInFormBase);
 

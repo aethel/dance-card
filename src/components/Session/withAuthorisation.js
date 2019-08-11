@@ -1,10 +1,11 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../constants/routes';
+import { navigate } from "@reach/router";
 
 const withAuthorization = condition => Component => {
   class WithAuthorization extends React.Component {
@@ -12,7 +13,8 @@ const withAuthorization = condition => Component => {
       this.listener = this.props.firebase.auth.onAuthStateChanged(authUser => {        
         if(!!authUser) { sessionStorage.setItem('uid', authUser.uid);}        
         if (!condition(authUser)) {
-          this.props.history.push(ROUTES.SIGN_IN);
+          navigate(ROUTES.SIGN_IN)
+          // this.props.history.push(ROUTES.SIGN_IN);
         }
       });
     }
@@ -33,7 +35,7 @@ const withAuthorization = condition => Component => {
   }
 
   return compose(
-    withRouter,
+    // withRouter,
     withFirebase,
   )(WithAuthorization);
 };

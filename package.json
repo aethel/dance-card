@@ -3,16 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/router": "^1.2.1",
     "firebase": "^5.11.1",
     "geofirestore": "^3.3.1",
     "leaflet": "^1.5.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
     "react-geolocated": "^2.5.0",
     "react-leaflet": "^2.4.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^2.1.8",
-    "recompose": "^0.30.0"
+    "react-scripts": "^3.0.1",
+    "recompose": "^0.30.0",
+    "rxfire": "^3.6.10",
+    "rxjs": "^6.5.2"
   },
   "scripts": {
     "start": "react-scripts start",
