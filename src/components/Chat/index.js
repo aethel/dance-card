@@ -16,33 +16,6 @@ class ChatBase extends PureComponent {
         this.state = { ...INITIAL_STATE }
     }
 
-    componentDidMount() {
-        // db.collection("cities").where("state", "==", "CA")
-        //     .onSnapshot(function (querySnapshot) {
-        //         var cities = [];
-        //         querySnapshot.forEach(function (doc) {
-        //             cities.push(doc.data().name);
-        //         });
-        //         console.log("Current cities in CA: ", cities.join(", "));
-        //     });
-        // const { fromID, toID } = this.props;
-        // const uid = sessionStorage.getItem('uid');
-        // console.log(uid);
-        
-        // this.props.firebase.chats().where('fromID', '==', uid).onSnapshot(querySnapshot => {
-        //     console.log(querySnapshot);
-        //     console.log(querySnapshot.id);
-            
-        //     querySnapshot.forEach(doc => {
-        //         console.log(doc.data());
-                
-        //     })
-        // })
-        // this.props.firebase.chats().get().then(res => {
-        //     res.docs.forEach(item => console.log(item));
-        // });
-    }
-
     onSubmit = (event) => {
         const { fromID, toID, fromUser } = this.props;
         console.log(fromUser);
@@ -84,21 +57,6 @@ class ChatBase extends PureComponent {
         const { fromID, toID } = this.props;
         this.userChatsObjUpdate(fromID);
         this.userChatsObjUpdate(toID);
-
-        // const fromIDobject = await this.props.firebase.geoUsers().where('id', '==', fromID).get();
-        // const fromIDdocID = this.findDocID(fromIDobject);
-        // const fromIDref = this.props.firebase.geoUsers().doc(fromIDdocID);
-        // const chatsFrom = fromIDobject.docs[0].data().chats;
-
-        // const toIDobject = await this.props.firebase.geoUsers().where('id', '==', toID).get();
-        // const toIDdocID = this.findDocID(toIDobject);
-        // const toIDref = this.props.firebase.geoUsers().doc(toIDdocID);
-        // const chatsTo = toIDobject.docs[0].data().chats;
-        // chatsFrom.push(`${fromID}${toID}`);
-        // chatsTo.push(`${fromID}${toID}`);
-        // fromIDref.set({chats: chatsFrom},{merge:true})
-        // toIDref.set({chats:chatsTo},{merge:true})
-
     }
 
     render() {
