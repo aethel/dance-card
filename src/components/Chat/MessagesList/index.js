@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { withFirebase } from '../../Firebase';
 import { map, flatMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -27,33 +27,30 @@ class MessageListBase extends React.PureComponent {
             }),
             map(docs => docs.data())
         )
-        messages$.subscribe((item,index) => {
+        messages$.subscribe((item, index) => {
             const messages = [...this.state.messages, item];
-            this.setState({messages})
+            this.setState({ messages })
         })
     }
 
 
 
     render() {
-        const { toID, fromID } = this.props;
         const { messages } = this.state;
+        console.log(messages);
+        
         return (
-
             <ul>
                 {messages.map((item, index) => (
-                    <li key={`${item.message}${index}`}>{item.message} {new Date(item.timestamp).toLocaleDateString('en-GB', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</li>
+                    <li key={`${item.message}${index}`}> 
+                        <time>{new Date(item.timestamp).toLocaleDateString('en-GB', { month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</time>
+                        <p>{item.message}</p>
+                    </li>
                 ))}
-        </ul>
+            </ul>
         )
     }
-
 }
-
-// on init check if user id is in some collections
-//if so, donwload
-// list to updated in messages in this collection
-//on unmount kill subscription ? 
 
 const MessagesList = withFirebase(MessageListBase);
 export default MessagesList;

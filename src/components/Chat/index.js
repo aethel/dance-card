@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     message: '',
     fromID: null,
     toID: null,
+    fromUser: null,
     timestamp: null
 }
 
@@ -43,13 +44,15 @@ class ChatBase extends PureComponent {
     }
 
     onSubmit = (event) => {
-        const { fromID, toID } = this.props;
+        const { fromID, toID, fromUser } = this.props;
+        console.log(fromUser);
+        
         const { message, timestamp } = this.state;
         event.preventDefault();
         this.addChatIdToUsers();
         console.log(fromID, toID, message);
         const chatsRef = this.props.firebase.chats();
-        chatsRef.doc().set({ message, fromID, toID, timestamp, chatID: `${fromID}${toID}`}).then(docRef => {
+        chatsRef.doc().set({ message, fromID, toID, timestamp, fromUser, chatID: `${fromID}${toID}`}).then(docRef => {
             console.log(docRef);
             // use chat(id) to set new Obj
         })
@@ -59,8 +62,8 @@ class ChatBase extends PureComponent {
     }
 
     onChange = event => {
-        const { fromID, toID } = this.props;
-        this.setState({ [event.target.name]: event.target.value, fromID, toID, timestamp: Date.now() });
+        const { fromID, toID, fromUser } = this.props;
+        this.setState({ [event.target.name]: event.target.value, fromUser, fromID, toID, timestamp: Date.now() });
     };
 
     findDocID = ({ docs }) => docs[0].id;
@@ -103,7 +106,6 @@ class ChatBase extends PureComponent {
         const { fromID, toID } = this.props;
         return (
             <Fragment>
-
                 <MessagesList fromID={fromID} toID={toID} />
                 <form onSubmit={this.onSubmit}>
                     <input name="message" type="text" defaultValue={message} placeholder="Your message" onChange={this.onChange} />

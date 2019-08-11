@@ -32,12 +32,12 @@ export const UserDetailsPopup = memo((props) => {
                 <ul>
                     {danceListItems}
                 </ul>
+            {`${ROUTES.CHAT}/${id}/${fromID}/${username}`}
             {/* <Link to={ROUTES.CHAT, toID:id}}>Message User Link</Link> */}
             {/* <Link to={{ pathname: `${ROUTES.CHAT}`, query: { toID: id, fromID: fromID }, hash: `${id}/${fromID}` }} as={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link> */}
             {/* <Link href={{ pathname: '/uebersicht/finanzierungszertifikat', query: CertificateStep.ManualUpload }}
                 as={`/uebersicht/finanzierungszertifikat/${CertificateStep.ManualUpload}`}> */}
-            {`${ROUTES.CHAT}/${id}/${fromID}`}
-            <Link to={`${ROUTES.CHAT}/${id}/${fromID}`}>Message User Link</Link>
+            <Link to={`${ROUTES.CHAT}/${id}/${fromID}/${username}`}>Message User Link</Link>
             </div>            
         </Popup>
     });
