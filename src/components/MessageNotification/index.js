@@ -1,23 +1,25 @@
 import React, { useState } from 'react';
 import * as ROUTES from '../../constants/routes';
 
-import { AuthUserContext } from '../Session';
+// import { AuthUserContext } from '../Session';
 import { withFirebase } from '../Firebase';
+import { ProfileProvider, useProfile } from '../Account/ProfileProvider/profile-provider';
 
 const MessageNotificationBar = () => (
     <div>
-        <AuthUserContext.Consumer>
-            {authUser =>
-                (authUser && <MessageNotification user={authUser} />)
-            }
-        </AuthUserContext.Consumer>
+        <ProfileProvider>
+            <MessageNotification />)
+        </ProfileProvider>
     </div>
 );
 
 const MessageNotificationBase = (props) => {
-    const [chatIDs, setChatIDs] = useState(null);
-    const uid = sessionStorage.getItem('uid');
-    const geoQuery = props.firebase.geoUsers().where('id', '==', uid);
+    const {profile} = useProfile();
+    console.log(props, profile);
+    
+    // const [chatIDs, setChatIDs] = useState(null);
+    // const uid = sessionStorage.getItem('uid');
+    // const geoQuery = props.firebase.geoUsers().where('id', '==', uid);
     // geoQuery.get().then(res => {
     //     res.docs.forEach(doc => {
     //         console.log(doc);
@@ -52,7 +54,6 @@ const MessageNotificationBase = (props) => {
         <div>
             is notification
    </div>
-
     )
 };
 
