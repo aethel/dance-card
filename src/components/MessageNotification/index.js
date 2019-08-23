@@ -1,22 +1,28 @@
-import React, { useState } from 'react';
-import * as ROUTES from '../../constants/routes';
+import React from 'react';
 
-// import { AuthUserContext } from '../Session';
+import { AuthUserContext, withAuthentication } from '../Session';
 import { withFirebase } from '../Firebase';
-import { ProfileProvider, useProfile } from '../Account/ProfileProvider/profile-provider';
+import { ProfileProvider, useProfile, ProfileConsumer } from '../Account/ProfileProvider/profile-provider';
 
 const MessageNotificationBar = () => (
     <div>
-        <ProfileProvider>
-            <MessageNotification />)
-        </ProfileProvider>
+        <AuthUserContext.Consumer>{authUser => authUser && (
+            <ProfileProvider>
+                <ProfileConsumer>{profile => <MessageNotification profile={profile} />}
+                </ProfileConsumer>
+            </ProfileProvider>
+        )
+        }
+        </AuthUserContext.Consumer>
+
     </div>
 );
 
 const MessageNotificationBase = (props) => {
-    const {profile} = useProfile();
-    console.log(props, profile);
-    
+    const { profile } = useProfile();
+    console.log(profile);
+    // console.log(profile, getProfile());
+
     // const [chatIDs, setChatIDs] = useState(null);
     // const uid = sessionStorage.getItem('uid');
     // const geoQuery = props.firebase.geoUsers().where('id', '==', uid);
@@ -28,16 +34,16 @@ const MessageNotificationBase = (props) => {
     //     })
     // });
 
-// if(chatIDs){
-//     chatIDs.forEach(chat => {
-//         props.firebase.chats().where('id','==',chat).onSnapshot( snapshot => {
-//             snapshot.forEach( item => {
-//                 console.log(item);
-                
-//             })      
-//         })
-//     })
-// }
+    // if(chatIDs){
+    //     chatIDs.forEach(chat => {
+    //         props.firebase.chats().where('id','==',chat).onSnapshot( snapshot => {
+    //             snapshot.forEach( item => {
+    //                 console.log(item);
+
+    //             })      
+    //         })
+    //     })
+    // }
     // const chats = async () => {
     //     const snapshot = await props.firebase.chats().get();
     //     const mappedMessages = snapshot.docs.map(doc => {
