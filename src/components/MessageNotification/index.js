@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AuthUserContext, withAuthentication } from '../Session';
+import { AuthUserContext } from '../Session';
 import { withFirebase } from '../Firebase';
 import { ProfileProvider, useProfile, ProfileConsumer } from '../Account/ProfileProvider/profile-provider';
 

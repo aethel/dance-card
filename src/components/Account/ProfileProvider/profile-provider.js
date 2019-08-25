@@ -29,9 +29,6 @@ useEffect(() => {
     } catch (error) {
         console.log(error);        
     }
-    // return () => {
-    //     cleanup
-    // };
 }, [uid]);
     
     return <ProfileContext.Provider value={{profile:state}}>{props.children}</ProfileContext.Provider>

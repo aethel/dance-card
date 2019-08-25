@@ -19,10 +19,10 @@ const Navigation = () => (
 const NavigationAuth = () => (
   <ul>
     <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
+      <Link to={ROUTES.HOME}>Home</Link>
     </li>
     <li>
-      <Link to={ROUTES.HOME}>Home</Link>
+      <Link to={ROUTES.CHATS}>Chats</Link>
     </li>
     <li>
       <Link to={ROUTES.ACCOUNT}>Account</Link>
