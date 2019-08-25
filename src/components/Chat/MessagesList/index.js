@@ -1,6 +1,6 @@
 import React from 'react'
 import { withFirebase } from '../../Firebase';
-import { map, flatMap } from 'rxjs/operators';
+import { map, flatMap, takeLast } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { collection } from 'rxfire/firestore';
 

@@ -18,7 +18,7 @@ import { withAuthentication } from '../Session';
 import MessageNotification from '../MessageNotification';
 
 const App = () => {  
-  
+ 
 
  return (
    <div>
