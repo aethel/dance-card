@@ -32,22 +32,29 @@ const ChatsBase = (props) => {
     useEffect(() => {
         console.log('loaded first time', profile.id);
         if (profile.id) {
-            const fromRef = props.firebase.chats().where('fromID', '==', profile.id);
-            const toRef = props.firebase.chats().where('toID', '==', profile.id);
-            const fromRef$ = collectionData(fromRef);
-            const toRef$ = collectionData(toRef);
+            const chatIDs = [];
+            profile.chats.forEach(chatID =>
+                 chatIDs.push(props.firebase.chats().where('chatID', '==', chatID).get()))
+            Promise.all(chatIDs).then(results => {
+                const mappedResult = results.map(result => result.docs.map(doc => doc.data()))
+                console.log(mappedResult);
+                
+                setState(mappedResult.flat());
+                }
+            )};
 
-            const messages$ = combineLatest(fromRef$, toRef$).pipe(
-                flatMap(msgs => {
-                    const [incoming, sent] = msgs;
-                    return [...incoming, ...sent]
-                })
-            )
-            messages$.subscribe((item) => {
-                const messages = [...state, item];
-                setState(messages)
-            })
-        }
+            // const messages$ = combineLatest(fromRef$, toRef$).pipe(
+            //     flatMap(msgs => {
+            //         const [incoming, sent] = msgs;
+            //         return [...incoming, ...sent]
+            //     })
+            // )
+            // messages$.subscribe((item) => {
+            //     const messages = [...state, item];
+            //     setState(messages)
+            // })
+            console.log(state);
+            
     }, [profile.id])
 
     return (

@@ -22,7 +22,7 @@ class ChatBase extends PureComponent {
         event.preventDefault();
         await this.addChatIdToUsers();
         const chatsRef = this.props.firebase.chats();
-        chatsRef.doc().set({ message, fromID, toID, timestamp, fromUser, chatID: `${fromID}${toID}`}).then(docRef => {
+        chatsRef.doc().set({ message, fromID, toID, timestamp, fromUser, chatID: `${fromID}${toID}` }).then(docRef => {
             console.log(docRef);
             // use chat(id) to set new Obj
         })
@@ -43,11 +43,11 @@ class ChatBase extends PureComponent {
         const userIDobject = await this.props.firebase.geoUsers().where('id', '==', userID).get();
         const userIDdocID = this.findDocID(userIDobject);
         const userIDref = this.props.firebase.geoUsers().doc(userIDdocID);
-        const userObj = await userIDref.get(); 
-                const userChats = userObj.data().chats || [];
+        const userObj = await userIDref.get();
+        const userChats = userObj.data().chats || [];
         const chatIdExists = userChats.includes(`${fromID}${toID}`);
-            !chatIdExists && userChats.push(`${fromID}${toID}`);
-            await userIDref.set({ chats: userChats }, { merge: true })
+        !chatIdExists && userChats.push(`${fromID}${toID}`);
+        await userIDref.set({ chats: userChats }, { merge: true })
     }
 
     addChatIdToUsers = () => {
