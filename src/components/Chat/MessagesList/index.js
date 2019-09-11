@@ -1,8 +1,5 @@
 import React from 'react';
 import { withFirebase } from '../../Firebase';
-import { map, flatMap, takeLast } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { collection } from 'rxfire/firestore';
 
 const uid = sessionStorage.getItem('uid');
 
@@ -15,32 +12,32 @@ class MessageListBase extends React.PureComponent {
   }
 
   componentDidMount() {
-    const fromRef = this.props.firebase.chats().where('fromID', '==', uid);
-    const toRef = this.props.firebase.chats().where('toID', '==', uid);
-    const fromRef$ = collection(fromRef);
-    const toRef$ = collection(toRef);
+    // const fromRef = this.props.firebase.chats().where('fromID', '==', uid);
+    // const toRef = this.props.firebase.chats().where('toID', '==', uid);
+    // const fromRef$ = collection(fromRef);
+    // const toRef$ = collection(toRef);
 
-    const messages$ = combineLatest(fromRef$, toRef$).pipe(
-      flatMap(msgs => {
-        const [incoming, sent] = msgs;
-        return [...incoming, ...sent];
-      }),
-      map(docs => docs.data())
-    );
-    messages$.subscribe((item, index) => {
-      const messages = [...this.state.messages, item];
-      this.setState({ messages });
-    });
+    // const messages$ = combineLatest(fromRef$, toRef$).pipe(
+    //   flatMap(msgs => {
+    //     const [incoming, sent] = msgs;
+    //     return [...incoming, ...sent];
+    //   }),
+    //   map(docs => docs.data())
+    // );
+    // messages$.subscribe((item, index) => {
+    //   const messages = [...this.state.messages, item];
+    //   this.setState({ messages });
+    // });
   }
 
   render() {
-    const { messages } = this.state;
-    console.log(messages);
+    const { messages } = this.props;
+    // console.log(messages);
 
     return (
       <ul>
         {/* {messages.sort((item1, item2) => item1.timestamp > item2.timestamp ).map((item, index) => ( */}
-        {this.props.messages
+        {messages
           .sort((item1, item2) => item1.timestamp > item2.timestamp)
           .map((item, index) => (
             <li key={`${item.message}${index}`}>

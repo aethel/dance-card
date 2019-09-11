@@ -20,7 +20,7 @@ const MessageNotificationBar = () => (
 
 const MessageNotificationBase = (props) => {
     const { profile } = useProfile();
-    console.log(profile);
+    // console.log(profile);
     // console.log(profile, getProfile());
 
     // const [chatIDs, setChatIDs] = useState(null);

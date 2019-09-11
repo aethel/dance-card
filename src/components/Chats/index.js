@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from '@reach/router';
+import * as ROUTES from "../../constants/routes";
 import { AuthUserContext } from '../Session';
 import { withFirebase } from '../Firebase';
 import {
@@ -6,10 +8,6 @@ import {
   useProfile,
   ProfileConsumer
 } from '../Account/ProfileProvider/profile-provider';
-import MessagesList from '../Chat/MessagesList';
-import { flatMap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-import { collectionData } from 'rxfire/firestore';
 
 const ChatsPage = () => (
   <div>
@@ -37,7 +35,6 @@ const groupBy = key => array =>
 const ChatsBase = props => {
   const [state, setState] = useState([]);
   const { profile } = useProfile();
-  console.log(profile);
 
   useEffect(() => {
     console.log('loaded first time', profile.id);
@@ -55,12 +52,12 @@ const ChatsBase = props => {
         const mappedResult = results.map(result =>
           result.docs.map(doc => doc.data())
         );
-        console.log(mappedResult);
         const groupByFromUser = groupBy('fromUser');
         const groupedMessages = groupByFromUser(mappedResult.flat());
-        console.log(Object.entries(groupedMessages));
 
         setState(Object.entries(groupedMessages));
+        console.log(state);
+        
       });
     }
 
@@ -74,7 +71,6 @@ const ChatsBase = props => {
     //     const messages = [...state, item];
     //     setState(messages)
     // })
-    console.log(state);
   }, [profile.id]);
 
   return (
@@ -88,7 +84,8 @@ const ChatsBase = props => {
             return (
               <div key={index}>
                 {message[0]}
-                <MessagesList messages={message[1]}></MessagesList>
+                {console.log(message[1])}
+                <Link to={ROUTES.CHAT} state={{messages:message[1]}}>Message User Link</Link>
                 {/* {new Date(message.timestamp).toLocaleDateString('en-GB', {
                   month: 'long',
                   day: 'numeric',

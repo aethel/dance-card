@@ -51,7 +51,8 @@ const App = () => {
        <AdminPage path={ROUTES.ADMIN}/>
        <HomePage path={ROUTES.HOME}/>
        <ChatsPage path={ROUTES.CHATS}/>
-        <ChatPage path='chat/:toID/:fromID/:fromUser'/>
+       <ChatPage path={ROUTES.CHAT} />
+        {/* <ChatPage path='chat/:toID/:fromID/:fromUser'/> */}
        
         </Router>
           </div>

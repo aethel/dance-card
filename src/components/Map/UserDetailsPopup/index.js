@@ -33,7 +33,8 @@ export const UserDetailsPopup = memo((props) => {
                     {danceListItems}
                 </ul>
             {`${ROUTES.CHAT}/${id}/${fromID}/${username}`}
-            <Link to={`${ROUTES.CHAT}/${id}/${fromID}/${username}`}>Message User Link</Link>
+            <Link to={ROUTES.CHAT} state={{ id, fromID, username }}>Message User Link</Link>
+            {/* <Link to={`${ROUTES.CHAT}/${id}/${fromID}/${username}`}>Message User Link</Link> */}
             </div>            
         </Popup>
     });
